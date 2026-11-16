@@ -1,0 +1,18 @@
+app,app_group,app_group_sort,segment,app_type
+PhonePe,PhonePe,1,Market leader,Third-party app
+Google Pay,Google Pay,2,Market leader,Third-party app
+Paytm,Paytm,3,Established,Third-party app
+Navi,Navi,4,Challenger,Third-party app
+super.money,super.money,5,Challenger,Third-party app
+BHIM,BHIM,6,Challenger,NPCI app
+FamApp,Other apps,7,Challenger,Third-party app
+WhatsApp,Other apps,7,Challenger,Third-party app
+CRED,Other apps,7,Challenger,Third-party app
+Amazon Pay,Other apps,7,Challenger,Third-party app
+Axis Bank Apps,Other apps,7,Bank app,Bank app
+Kotak Bank Apps,Other apps,7,Bank app,Bank app
+HDFC Bank Apps,Other apps,7,Bank app,Bank app
+ICICI Bank Apps,Other apps,7,Bank app,Bank app
+Yes Bank Apps,Other apps,7,Bank app,Bank app
+SBI Apps,Other apps,7,Bank app,Bank app
+Others,Other apps,7,Long tail,Other

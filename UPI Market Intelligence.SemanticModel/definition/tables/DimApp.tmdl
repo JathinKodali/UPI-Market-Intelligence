@@ -1,0 +1,61 @@
+/// UPI apps with their market group and type.
+table DimApp
+	lineageTag: 612290b2-dac4-59e2-bed6-b8884035602f
+
+	column App
+		dataType: string
+		lineageTag: 96d7d874-798b-5c51-bb66-39fe2af6ec6d
+		summarizeBy: none
+		sourceColumn: App
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'App Group'
+		dataType: string
+		lineageTag: 1d8fbad5-65a8-59f5-a273-a864b18f474f
+		summarizeBy: none
+		sourceColumn: App Group
+		sortByColumn: 'App Group Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'App Group Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c8f791a9-4123-5487-8949-65a5db6302a3
+		summarizeBy: none
+		sourceColumn: App Group Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column Segment
+		dataType: string
+		lineageTag: 3878a0b7-0baa-5b3a-b2d0-2a60f814b3e3
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'App Type'
+		dataType: string
+		lineageTag: 2f7c1282-ef60-5008-bbb7-27ebe922a6b0
+		summarizeBy: none
+		sourceColumn: App Type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimApp = m
+		mode: import
+		source =
+				// Source: data/dim_app.csv (official NPCI statistics), embedded so the report refreshes on any computer
+				let
+				    Source = Csv.Document(Binary.Decompress(Binary.FromText("lZDdasMwDIXv8xR+AG2w/+s0bdewtQvbYOyqaETEIY5tbHUse/q5LhvZD52LQT4cfUcIobWA1q4bZzYjtfbGMXhqetIcbR4sZZU0miqCz/8Elug6YqEIa3LwKFtXH1l0PIgQyq6NaRSJCgcYydN/UoHhHnb1DGae8UW1XlL9i1zhawuxnEMhUSnSzR8D/caSO+7DzgOM9cW+0GRRLiGWyzG2qooy9ufY5+F4dyzJbQ0PV/vGPUlkf0iguJ9Nk+G8x3ej43WTI2+tFxPUnci37LdYtIP+EtmNYezS8cV0XqTTZRFeOv5MByz+MCmTuNj+Qd0a3QjGVu3s7AM=", BinaryEncoding.Base64), Compression.Deflate), [Delimiter = ",", Columns = 5, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"app", type text}, {"app_group", type text}, {"app_group_sort", Int64.Type}, {"segment", type text}, {"app_type", type text}}, "en-US"),
+				    Result = Table.RenameColumns(Typed, {{"app", "App"}, {"app_group", "App Group"}, {"app_group_sort", "App Group Sort"}, {"segment", "Segment"}, {"app_type", "App Type"}})
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
+

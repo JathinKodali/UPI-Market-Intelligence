@@ -1,0 +1,58 @@
+/// Person-to-person (P2P) vs person-to-merchant (P2M) UPI payments, unpivoted to one row per type.
+table FactP2PP2M
+	lineageTag: 96e6862c-2eda-5eec-b6d0-5f329d8c0f23
+
+	column Date
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: a39c0d05-96aa-573c-bda8-35f38df4996a
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Volume Mn'
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 47e3371d-d19b-5b3d-89bc-c012474789ac
+		summarizeBy: sum
+		sourceColumn: Volume Mn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Value Cr'
+		dataType: double
+		formatString: #,0.00
+		lineageTag: d9aeb7f2-e120-5245-9530-21e0f1bc42fb
+		summarizeBy: sum
+		sourceColumn: Value Cr
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Payment Type'
+		dataType: string
+		lineageTag: b0fe0a2f-b11e-5362-88e2-3d0fc6ba99e1
+		summarizeBy: none
+		sourceColumn: Payment Type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactP2PP2M = m
+		mode: import
+		source =
+				// Source: data/upi_p2p_p2m.csv (official NPCI statistics), embedded so the report refreshes on any computer
+				let
+				    Source = Csv.Document(Binary.Decompress(Binary.FromText("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", BinaryEncoding.Base64), Compression.Deflate), [Delimiter = ",", Columns = 6, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"year", Int64.Type}, {"month", type text}, {"p2p_volume_mn", type number}, {"p2p_value_cr", type number}, {"p2m_volume_mn", type number}, {"p2m_value_cr", type number}}, "en-US"),
+				    MonthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"},
+				    AddDate = Table.AddColumn(Typed, "Date", each #date([year], List.PositionOf(MonthNames, [month]) + 1, 1), type date),
+				    P2P = Table.AddColumn(Table.RenameColumns(Table.SelectColumns(AddDate, {"Date", "p2p_volume_mn", "p2p_value_cr"}), {{"p2p_volume_mn", "Volume Mn"}, {"p2p_value_cr", "Value Cr"}}), "Payment Type", each "P2P", type text),
+				    P2M = Table.AddColumn(Table.RenameColumns(Table.SelectColumns(AddDate, {"Date", "p2m_volume_mn", "p2m_value_cr"}), {{"p2m_volume_mn", "Volume Mn"}, {"p2m_value_cr", "Value Cr"}}), "Payment Type", each "P2M", type text),
+				    Combined = Table.Combine({P2P, P2M}),
+				    Result = Table.TransformColumnTypes(Combined, {{"Volume Mn", type number}, {"Value Cr", type number}, {"Payment Type", type text}})
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
+

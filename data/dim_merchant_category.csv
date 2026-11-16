@@ -1,0 +1,47 @@
+mcc,category,sector
+4112,Passenger railways,Travel & Transport
+4121,Taxis and cabs,Travel & Transport
+4214,Freight and trucking,Travel & Transport
+4784,Tolls and bridge fees,Travel & Transport
+4812,Telecom equipment,Bills & Telecom
+4814,Mobile and telecom services,Bills & Telecom
+4899,Cable and pay TV,Bills & Telecom
+4900,Utilities (electricity/gas/water),Bills & Telecom
+5137,Uniforms and workwear,Shopping
+5262,Online marketplaces,Shopping
+5311,Department stores,Shopping
+5331,Variety stores,Shopping
+5399,General merchandise,Shopping
+5411,Groceries and supermarkets,Food & Groceries
+5412,Digital gold,Financial Services
+5413,Credit card bill payments,Financial Services
+5422,Meat shops,Food & Groceries
+5441,Sweets and confectionery,Food & Groceries
+5451,Dairies,Food & Groceries
+5462,Bakeries,Food & Groceries
+5499,Convenience food shops,Food & Groceries
+5541,Fuel stations,Fuel
+5651,Family clothing,Shopping
+5691,Clothing shops,Shopping
+5722,Household appliances,Shopping
+5732,Electronics shops,Shopping
+5812,Restaurants,Eating Out
+5813,Bars and pubs,Eating Out
+5814,Fast food,Eating Out
+5815,Digital media (books/music/video),Digital Goods
+5816,Digital games,Digital Goods
+5912,Pharmacies,Health
+5921,Liquor shops,Food & Groceries
+5943,Stationery shops,Shopping
+5993,Paan and tobacco shops,Food & Groceries
+6012,Financial institutions,Financial Services
+6211,Stock brokers,Financial Services
+6540,Wallet top-up,Financial Services
+7011,Hotels and lodging,Travel & Transport
+7230,Salons and barbers,Personal Services
+7299,Personal services (other),Personal Services
+7322,Debt collection (loan repayments),Financial Services
+7399,Business services,Personal Services
+7622,Electronics repair,Personal Services
+9399,Government services,Government
+OTH,All other categories,Other

@@ -1,0 +1,111 @@
+/// One row per month from April 2016 to the latest month in the data.
+table DimDate
+	lineageTag: c374abc9-ef41-5e01-b4c8-25367eeecb51
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: mmm yyyy
+		lineageTag: c5f11d53-9655-5384-b741-20ca95c20726
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 16bf163e-82d1-57bf-bf0d-f8f6566bc56d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d7320f92-761f-5f8b-a5d2-a9a6ec92a80d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 4fca9751-fc47-5415-b839-561c2f24aef7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Reporting month, e.g. Aug 2026.
+	column Month
+		dataType: string
+		lineageTag: 15a92ddc-5bb2-5d4d-b979-f6f965095526
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month Index'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Index'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7c393b6a-5e5c-582a-9f15-ccfb1155caa4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Index]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FY Start Year'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 05daece6-058d-553e-96ad-0f9c2108b299
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [FY Start Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indian fiscal year, April to March.
+	column 'Fiscal Year'
+		dataType: string
+		lineageTag: 9fcd3e7a-b97e-5f1c-83a9-bfe7c91b5b77
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Fiscal Year]
+		sortByColumn: 'FY Start Year'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimDate = calculated
+		mode: import
+		source =
+				VAR _last = MAX ( FactUPIMonthly[Date] )
+				VAR _months = FILTER ( CALENDAR ( DATE ( 2016, 4, 1 ), _last ), DAY ( [Date] ) = 1 )
+				RETURN
+				    ADDCOLUMNS (
+				        _months,
+				        "Year", YEAR ( [Date] ),
+				        "Month Number", MONTH ( [Date] ),
+				        "Month Name", FORMAT ( [Date], "mmm" ),
+				        "Month", FORMAT ( [Date], "mmm yyyy" ),
+				        "Month Index", YEAR ( [Date] ) * 12 + MONTH ( [Date] ),
+				        "FY Start Year", IF ( MONTH ( [Date] ) >= 4, YEAR ( [Date] ), YEAR ( [Date] ) - 1 ),
+				        "Fiscal Year", "FY" & IF ( MONTH ( [Date] ) >= 4, YEAR ( [Date] ), YEAR ( [Date] ) - 1 ) & "-"
+				            & RIGHT ( IF ( MONTH ( [Date] ) >= 4, YEAR ( [Date] ), YEAR ( [Date] ) - 1 ) + 1, 2 )
+				    )
+
+	annotation PBI_ResultType = Table
+

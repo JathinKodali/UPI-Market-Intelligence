@@ -1,0 +1,40 @@
+relationship 44493137-1e71-5d87-9efb-ddec9cbb1d3c
+	fromColumn: FactUPIMonthly.Date
+	toColumn: DimDate.Date
+
+relationship 10944ead-9cc3-5374-b001-3087d32df7be
+	fromColumn: FactP2PP2M.Date
+	toColumn: DimDate.Date
+
+relationship daff9f6a-be49-5530-bb8c-0405cf5e462e
+	fromColumn: FactAppMonthly.Date
+	toColumn: DimDate.Date
+
+relationship 64924777-2d99-5bf6-9828-e3f5c01ae761
+	fromColumn: FactMerchantCategory.Date
+	toColumn: DimDate.Date
+
+relationship 4027ccc7-9bb7-5b9d-b355-9cf539593a82
+	fromColumn: FactStateMonthly.Date
+	toColumn: DimDate.Date
+
+relationship 906bb881-51fa-5f3e-bd54-ee627866ecd8
+	fromColumn: FactBankPerformance.Date
+	toColumn: DimDate.Date
+
+relationship 2f5d5921-e638-5d21-a6e5-08eea8447609
+	fromColumn: FactAppMonthly.App
+	toColumn: DimApp.App
+
+relationship 3ba3898f-e221-592b-a6b2-21d00ff5b586
+	fromColumn: FactMerchantCategory.MCC
+	toColumn: DimMerchantCategory.MCC
+
+relationship cb1e53cd-ecbc-5572-856f-fce33837c3fe
+	fromColumn: FactStateMonthly.State
+	toColumn: DimState.State
+
+relationship d9ec850c-6d73-5401-a94c-bdf4bfd20ad1
+	fromColumn: FactBankPerformance.'Bank Key'
+	toColumn: DimBank.'Bank Key'
+

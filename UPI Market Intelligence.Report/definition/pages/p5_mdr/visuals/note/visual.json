@@ -1,0 +1,108 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "note",
+  "position": {
+    "x": 16,
+    "y": 466,
+    "z": 8000,
+    "height": 246,
+    "width": 300,
+    "tabOrder": 8000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Rules (NPCI FAQ, 15 Sep 2026)",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#1E2A5A",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "From 15 Oct 2026 merchants pay 0.4% on UPI payments above ₹2,000, capped at ₹300. Fuel, railways, telecom and insurance pay a flat ₹5. Person-to-person payments and small merchants (up to ₹1 lakh a month via QR) stay free.",
+                    "textStyle": {
+                      "fontSize": "8pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The 67% share and the 40/30/20/10 split are press figures, not NPCI data.",
+                    "textStyle": {
+                      "fontSize": "8pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,34 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["DimApp", "DimBank", "DimState", "DimMerchantCategory", "FactUPIMonthly", "FactP2PP2M", "FactAppMonthly", "FactMerchantCategory", "FactStateMonthly", "FactBankPerformance"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table _Measures
+ref table DimDate
+ref table DimApp
+ref table DimBank
+ref table DimState
+ref table DimMerchantCategory
+ref table FactUPIMonthly
+ref table FactP2PP2M
+ref table FactAppMonthly
+ref table FactMerchantCategory
+ref table FactStateMonthly
+ref table FactBankPerformance
+ref table 'MDR Rate Options'
+ref table 'High Value Share Options'
+ref table 'Cap Adjustment Options'
+ref table 'MDR Split'
+
+ref cultureInfo en-US
+

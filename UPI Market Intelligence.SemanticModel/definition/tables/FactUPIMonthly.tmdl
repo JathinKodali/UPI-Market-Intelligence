@@ -1,0 +1,58 @@
+/// NPCI monthly UPI totals since April 2016 (volume in millions, value in rupees crore).
+table FactUPIMonthly
+	lineageTag: 7e33d992-4c6c-5edc-be26-e1f9700e7cff
+
+	column Date
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 60ac6017-9e16-55a6-9676-9e1efe21e150
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Banks Live'
+		dataType: int64
+		formatString: #,0
+		lineageTag: f183151d-0d74-5370-a373-d09aaf76879a
+		summarizeBy: sum
+		sourceColumn: Banks Live
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Volume Mn'
+		dataType: double
+		formatString: #,0.00
+		lineageTag: f4ddcea3-d35a-5ea8-ab5b-1cdb57205f67
+		summarizeBy: sum
+		sourceColumn: Volume Mn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Value Cr'
+		dataType: double
+		formatString: #,0.00
+		lineageTag: d51b1855-cce3-5b1c-bddc-90e5ff322799
+		summarizeBy: sum
+		sourceColumn: Value Cr
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactUPIMonthly = m
+		mode: import
+		source =
+				// Source: data/upi_monthly_totals.csv (official NPCI statistics), embedded so the report refreshes on any computer
+				let
+				    Source = Csv.Document(Binary.Decompress(Binary.FromText("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", BinaryEncoding.Base64), Compression.Deflate), [Delimiter = ",", Columns = 4, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"month", type text}, {"banks_live", Int64.Type}, {"volume_mn", type number}, {"value_cr", type number}}, "en-US"),
+				    MonthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"},
+				    AddDate = Table.AddColumn(Typed, "Date", each #date(Number.From(Text.AfterDelimiter([month], "-")), List.PositionOf(MonthNames, Text.BeforeDelimiter([month], "-")) + 1, 1), type date),
+				    Renamed = Table.RenameColumns(AddDate, {{"banks_live", "Banks Live"}, {"volume_mn", "Volume Mn"}, {"value_cr", "Value Cr"}}),
+				    Sorted = Table.Sort(Renamed, {{"Date", Order.Ascending}}),
+				    Result = Table.SelectColumns(Sorted, {"Date", "Banks Live", "Volume Mn", "Value Cr"})
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
+

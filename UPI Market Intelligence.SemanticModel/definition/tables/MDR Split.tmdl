@@ -1,0 +1,49 @@
+/// How the MDR is shared between participants, as reported in the press (IBTimes, 25 Sep 2026).
+table 'MDR Split'
+	lineageTag: 7d6940f0-8c14-531b-957f-98309a6c9495
+
+	column Party
+		dataType: string
+		lineageTag: 5ab39dd9-8fda-5b65-bbe5-75a2ab01d94d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Party]
+		sortByColumn: Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column Share
+		dataType: double
+		formatString: 0%
+		lineageTag: 9d10e1b0-e541-5089-8d16-e8e8cdbf749a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Share]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort
+		dataType: int64
+		isHidden
+		lineageTag: 4a41884d-7886-5973-bad9-16c5f5c05453
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'MDR Split' = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Party", STRING, "Share", DOUBLE, "Sort", INTEGER,
+				    {
+				        { "Customer's bank", 0.4, 1 },
+				        { "Merchant's bank", 0.3, 2 },
+				        { "UPI app", 0.2, 3 },
+				        { "App's partner bank", 0.1, 4 }
+				    }
+				)
+
+	annotation PBI_ResultType = Table
+

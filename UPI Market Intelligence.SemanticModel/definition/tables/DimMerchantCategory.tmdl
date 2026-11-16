@@ -1,0 +1,42 @@
+/// Merchant category codes (MCC) with short names and a sector grouping.
+table DimMerchantCategory
+	lineageTag: a354c01c-c119-5bfb-b970-26913390492f
+
+	column MCC
+		dataType: string
+		lineageTag: 2d8db465-1d19-55dd-b5ad-1d0e0ad96d93
+		summarizeBy: none
+		sourceColumn: MCC
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: d1ef0e54-b405-5868-b7b1-457345f735ac
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sector
+		dataType: string
+		lineageTag: 485ec8ab-af8c-5a1b-ad0f-66b3ce8bd0b1
+		summarizeBy: none
+		sourceColumn: Sector
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimMerchantCategory = m
+		mode: import
+		source =
+				// Source: data/dim_merchant_category.csv (official NPCI statistics), embedded so the report refreshes on any computer
+				let
+				    Source = Csv.Document(Binary.Decompress(Binary.FromText("dVVNc9owEL3zK3TqkBl1gm0+4mPzQTg0k04h6XktNmYHWXIkGcq/7woTaIK5ZGLt29Xu26dHpZRUELC0bic9qmBdb5gkqfwF3qMp0QkHpLew83LhYINafBP8j/G1dYGhaSIX8Je8ALMUCopuWJoM5dQhlauwBwbXqDWZshM8uRnKhdW6rVk4WpYo3hC7S99wswvUqGwl8L2hukIT5C3FfAa2kQgbyidbkMa2gUOGR7chxaXPE/Jc3kFxwNewE4vXc1Q+GMiXQJoCoRf9eBwcKQq76xL89ZapdVdnaaMkm8gXQ2/WVe2UW+vWWwQn5ytb18xMb5SOU/lsNBkUFbg1hlpD7PSEyJJE3mMNLsSZheflfY5niXwFRxh2HUGe7xENOtCiQqdW3AZ5/A/BOpCPzip0cbbYpW9qdG0zXk6tXfJMR0RMSOU9lRS4ZGn1Uk7JgFHEn/MDzxGUyTuHSwosF8f7ZW4ivXEE352RpvIJgQfk1jrvHSZyvkVuqlWhNW+8BrI83K4LPmLagOJHV5Rpv4U1XgpHWVizQUNoFOsyIi41xsPKacOK9QFiP37/1RuNuYMpVKR3QmkbVvElnHgf54m8OxwfSp+CEyZjZhuPKyZYQF1rYsI+bXaSpfJhL0RrSPmzEvHF/EZuqeFXxJw/cG9803MTYizj6V1LZN0UX6P8jMGH/dRfIqPj6iteLoh+Ye3aX1eNJ3W9oSXaqyPikdN9TBqf9AIVD/EFkEcjWgFLTsVtzBB0WPExm85Pem+su8h8PszkvCWdRXBGQZ5n7HBgWi+wBShlL9UaD7iLky7J+EChOazzXK7jlJ/NPFi1ZuuyrKNu1Gg4kH9Aawx8f/29qbtQkwHXmlk2q3Yh2i7LC645SbOBnIPmrlrbBFfEu3/xH2s+FU1ZwsfjDwMUfRZc9KqOhIw1d48FP1h25fZlib62TJ/Dj5d71dl/NJlbVoBB709e23HFOP2s2ViYXAcy3/uW3aAzrel9FD2d9Z4XM/mDXWU/kTj8vEUBPceD3j8=", BinaryEncoding.Base64), Compression.Deflate), [Delimiter = ",", Columns = 3, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"mcc", type text}, {"category", type text}, {"sector", type text}}, "en-US"),
+				    Result = Table.RenameColumns(Typed, {{"mcc", "MCC"}, {"category", "Category"}, {"sector", "Sector"}})
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
+

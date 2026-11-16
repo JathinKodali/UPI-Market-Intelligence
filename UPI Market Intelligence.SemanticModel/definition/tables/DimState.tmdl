@@ -1,0 +1,52 @@
+/// States and union territories with region. Classified = No for NPCI's unclassified bucket.
+table DimState
+	lineageTag: 4d0df2d8-55d7-56f5-87db-25ed2b27c30e
+
+	column State
+		dataType: string
+		isHidden
+		lineageTag: 9df7f996-d138-540d-8b9d-6b327f32dd63
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'State Name'
+		dataType: string
+		lineageTag: 0859cefd-16dc-5234-aac0-0ed557893f41
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: State Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 4fa8dedf-8d7c-5c8b-952b-f74ac091137d
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Classified
+		dataType: string
+		lineageTag: 69b70e4f-3bf9-55fc-9f81-5ebd74623956
+		summarizeBy: none
+		sourceColumn: Classified
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimState = m
+		mode: import
+		source =
+				// Source: data/dim_state.csv (official NPCI statistics), embedded so the report refreshes on any computer
+				let
+				    Source = Csv.Document(Binary.Decompress(Binary.FromText("bVPLbtswELznK3QqWoA/sRZVk9bDBiU1cC/FxmItxnoEpNTC/fouldRi3FwsGLM7Ozs7dBNOmjn/+2PAXjOrz2Yc2KlD58xPo5uHuogzKEv5VSac1cOKRJ+78YQTlUfDOEUTns+6+fKuhBXjQw4CFJSiUsBybNGiayeL7FG7iR21e0hBFVBBCixFO+CEF2TlOE/tgtZVBSo6KOBJKVg9TWijg8VGu5bY7VtVlWRQbKEAVukOhzMOIUcFucyiAnjNKuxNFxXYzAGuYAdlJaBgCp/RTS0OATcUXCi4SYChaS3eNKwsG0mLso2hFVmCb8vlwMVxbc6xaa9rc6wHsqJbKrf1jnyq2HZ+Jo+m1R+eZEIyrrvWBKoek7KKNgktnS2l0UbT2t06mcQcvSEC7dXbsbamiYKM3NY0OrRpz2UpgO0b41pciej4kDNwDvtXEv0POdTFDjbsMA/P+BQM2NHslOzkbEdmXMjOZqWLhYCqkuUWlGBx2+I0GXdG+96N5ezwSrIcHV9pgiGQ53VEeJRSunKp2A77fo6oKkopY72xQbWQOcQCstslhOnx1GL3QZi2e2DbMUho7GXIN8HEbxa5QUJUXbxnBzsPH9AHzvE6FolSR3KvmU+ttvYanCJPtkQHR3oy+kw0eMU7hkrJQ01PqrLmZbb3aA6Fhylvg4fvUA6cAv2JXgTtFAn4lmSS/nKgNv+VNePYUMipBGnXSOAv3ZnFWo49Dr7IzKtBnijzp/Ll3e1Oqxz5fa8oRLn5M9r/YlTKNJU5K83lYu4xIl1U+TsXMt5vSLAs/azSv8RFjJdVmNP4REql8+NdYGUGnHLEMmwoQsHRMkgp7fwxSQ4EXijyzW+tX4LOvw==", BinaryEncoding.Base64), Compression.Deflate), [Delimiter = ",", Columns = 4, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"state", type text}, {"state_name", type text}, {"region", type text}, {"classified", type text}}, "en-US"),
+				    Result = Table.RenameColumns(Typed, {{"state", "State"}, {"state_name", "State Name"}, {"region", "Region"}, {"classified", "Classified"}})
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
+

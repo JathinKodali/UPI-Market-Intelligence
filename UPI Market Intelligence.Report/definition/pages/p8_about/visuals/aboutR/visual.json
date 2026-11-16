@@ -1,0 +1,278 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "aboutR",
+  "position": {
+    "x": 648,
+    "y": 108,
+    "z": 4000,
+    "height": 604,
+    "width": 616,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "How to use",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1E2A5A",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The Month slicer (top right, synced across pages) opens on the latest month. Pick another month to change every KPI, ranking and sentence. Trend charts always show full history.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Click a bar or dot to cross-filter the page. On the MDR page, change the three assumptions; the first option in each is the NPCI or reported value.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": " ",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Definitions",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1E2A5A",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Volume: number of transactions (millions). Value: rupees crore (1 crore = 10 million; 1 lakh crore = 1 trillion).",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "P2P: person-to-person transfer. P2M: person-to-merchant (shop) payment.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "MDR: merchant discount rate, the fee a merchant pays on a digital payment.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "HHI: Herfindahl-Hirschman Index, the sum of squared market shares. Above 2,500 means highly concentrated.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Business decline (BD): failed because of the customer or rules (wrong PIN, balance, limits). Technical decline (TD): failed because of a bank or NPCI system problem.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "30 bn projection: months until 30 bn transactions a month if the latest year-on-year growth rate continues.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": " ",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Limitations",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1E2A5A",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "NPCI publishes monthly totals, not individual transactions, so this is market-level analysis.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "App data groups the long tail of small apps into 'Others'. Bank data covers the 20 largest sending banks.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "About 44% of transactions carry no state tag, so state shares use located volume only.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "MDR revenue is an estimate: NPCI does not publish merchant value by ticket size, and caps, flat fees and exemptions reduce the real figure (use slicer 3).",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

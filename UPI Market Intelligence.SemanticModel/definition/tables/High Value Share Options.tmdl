@@ -1,0 +1,50 @@
+/// What-if options for the share of merchant value in payments above Rs 2,000. First option = reported 67%.
+table 'High Value Share Options'
+	lineageTag: f07c41bb-f052-571e-9d9e-d876364e805f
+
+	column 'Share Option'
+		dataType: string
+		lineageTag: 57e078fc-5e2d-5f11-8f35-5e55a8e5a3e9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Share Option]
+		sortByColumn: Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column Share
+		dataType: double
+		formatString: 0%
+		lineageTag: e7ce5c13-1b9e-5f5d-8c2f-536ea0e24e6d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Share]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort
+		dataType: int64
+		isHidden
+		lineageTag: 64c1006f-1b05-5ef7-9eb2-11e89326cdd8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'High Value Share Options' = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Share Option", STRING, "Share", DOUBLE, "Sort", INTEGER,
+				    {
+				        { "67%", 0.67, 1 },
+				        { "55%", 0.55, 2 },
+				        { "60%", 0.6, 3 },
+				        { "70%", 0.7, 4 },
+				        { "75%", 0.75, 5 }
+				    }
+				)
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,49 @@
+/// What-if options for the merchant discount rate. First option = NPCI rate of 0.40% (default).
+table 'MDR Rate Options'
+	lineageTag: e736f9d5-c23c-530b-a116-956cdec83331
+
+	column 'MDR Rate Option'
+		dataType: string
+		lineageTag: 330c610b-0df2-50c6-960e-62d32d877774
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MDR Rate Option]
+		sortByColumn: Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'MDR Rate'
+		dataType: double
+		formatString: 0.00%
+		lineageTag: cd7e1f0e-f36a-5f26-accb-7dfd95cdba3d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MDR Rate]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort
+		dataType: int64
+		isHidden
+		lineageTag: 74d0f046-2d05-54a4-9887-f907ffe2e90b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'MDR Rate Options' = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "MDR Rate Option", STRING, "MDR Rate", DOUBLE, "Sort", INTEGER,
+				    {
+				        { "0.40%", 0.004, 1 },
+				        { "0.25%", 0.0025, 2 },
+				        { "0.30%", 0.003, 3 },
+				        { "0.50%", 0.005, 4 }
+				    }
+				)
+
+	annotation PBI_ResultType = Table
+

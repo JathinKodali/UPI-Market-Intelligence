@@ -1,0 +1,38 @@
+state,state_name,region,classified
+UNCLASSIFIED,Unclassified (location not tagged),Unclassified,No
+MAHARASHTRA,Maharashtra,West,Yes
+KARNATAKA,Karnataka,South,Yes
+UTTAR PRADESH,Uttar Pradesh,North,Yes
+TELANGANA,Telangana,South,Yes
+TAMIL NADU,Tamil Nadu,South,Yes
+RAJASTHAN,Rajasthan,North,Yes
+ANDHRA PRADESH,Andhra Pradesh,South,Yes
+BIHAR,Bihar,East,Yes
+MADHYA PRADESH,Madhya Pradesh,Central,Yes
+GUJARAT,Gujarat,West,Yes
+DELHI,Delhi,North,Yes
+WEST BENGAL,West Bengal,East,Yes
+HARYANA,Haryana,North,Yes
+KERALA,Kerala,South,Yes
+ODISHA,Odisha,East,Yes
+ASSAM,Assam,Northeast,Yes
+PUNJAB,Punjab,North,Yes
+JHARKHAND,Jharkhand,East,Yes
+CHHATTISGARH,Chhattisgarh,Central,Yes
+UTTARAKHAND,Uttarakhand,North,Yes
+JAMMU AND KASHMIR,Jammu and Kashmir,North,Yes
+HIMACHAL PRADESH,Himachal Pradesh,North,Yes
+GOA,Goa,West,Yes
+CHANDIGARH,Chandigarh,North,Yes
+ARUNACHAL PRADESH,Arunachal Pradesh,Northeast,Yes
+PUDUCHERRY,Puducherry,South,Yes
+MEGHALAYA,Meghalaya,Northeast,Yes
+TRIPURA,Tripura,Northeast,Yes
+MANIPUR,Manipur,Northeast,Yes
+DADRA & NAGAR HAVELI & DAMAN & DIU,Dadra & Nagar Haveli and Daman & Diu,West,Yes
+NAGALAND,Nagaland,Northeast,Yes
+MIZORAM,Mizoram,Northeast,Yes
+SIKKIM,Sikkim,Northeast,Yes
+ANDAMAN AND NICOBAR ISLANDS,Andaman and Nicobar Islands,South,Yes
+LADAKH,Ladakh,North,Yes
+LAKSHADWEEP,Lakshadweep,South,Yes

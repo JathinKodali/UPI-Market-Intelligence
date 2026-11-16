@@ -1,0 +1,290 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "aboutL",
+  "position": {
+    "x": 16,
+    "y": 108,
+    "z": 3000,
+    "height": 604,
+    "width": 616,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Business questions",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1E2A5A",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "1. How fast is UPI growing, and is it becoming an everyday small-payments network?",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "2. Who controls the market, and can PhonePe and Google Pay meet NPCI's 30% market-share cap?",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "3. Where do people spend through UPI?",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "4. What will NPCI's new 0.4% merchant fee (MDR) earn, and who gets the money?",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "5. Which banks fail their customers most often, and why?",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "6. Which states drive UPI usage?",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": " ",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Data sources",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1E2A5A",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "NPCI Product Statistics (npci.org.in): monthly UPI volume, value and banks live, April 2016 to August 2026.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "NPCI Ecosystem Statistics: UPI apps (April 2023+), P2P vs P2M (April 2020+), merchant categories (April 2024+), states and districts (April 2025+), top remitter banks' approval and decline rates (April 2025+).",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "MDR rules: NPCI FAQ of 15 Sep 2026. The 67% high-value share (RetailIntel) and the 40/30/20/10 revenue split (IBTimes, 25 Sep 2026) are press figures, so the simulator lets you change the assumptions.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "The 30% market-share cap deadline (31 Dec 2026) is as last extended by NPCI in December 2024.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": " ",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "How it was built",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1E2A5A",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Power Query: 10 queries parse the NPCI CSVs (embedded in the file so it refreshes on any computer), set types, turn month names into dates, unpivot P2P/P2M, standardise bank names and sum districts to states.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Data model: star schema. Six fact tables share a monthly DimDate with the Indian fiscal year (April-March); dimensions for apps, banks, states and merchant categories; four what-if tables drive the MDR simulator.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "DAX: 182 measures: month-selected KPIs, same-month-last-year growth, market share, HHI concentration, Top-N ranking, volume-weighted decline rates, a 30 bn projection, what-if revenue, dynamic text and conditional-formatting colours.",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#5B6475",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

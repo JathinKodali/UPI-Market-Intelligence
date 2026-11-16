@@ -1,0 +1,49 @@
+/// What-if reduction for the Rs 300 cap, Rs 5 flat-fee sectors and the small-merchant exemption.
+table 'Cap Adjustment Options'
+	lineageTag: b40890d4-49f4-50f1-a604-ac99b257a5ac
+
+	column 'Adjustment Option'
+		dataType: string
+		lineageTag: c4626065-db7e-572c-b19f-4a3119a1e7f5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Adjustment Option]
+		sortByColumn: Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column Adjustment
+		dataType: double
+		formatString: 0%
+		lineageTag: 46f99a4c-6a7a-54f2-9be2-d9ffd946c326
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Adjustment]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort
+		dataType: int64
+		isHidden
+		lineageTag: 82ad3049-27cb-5208-a939-a686c522b053
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Cap Adjustment Options' = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Adjustment Option", STRING, "Adjustment", DOUBLE, "Sort", INTEGER,
+				    {
+				        { "None", 0, 1 },
+				        { "-10%", 0.1, 2 },
+				        { "-20%", 0.2, 3 },
+				        { "-30%", 0.3, 4 }
+				    }
+				)
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,43 @@
+/// Clean bank names and type. Bank Key is the upper-case NPCI name, which varies in capitalisation month to month.
+table DimBank
+	lineageTag: 3fa0fce9-3e5f-5fae-9020-b7695105f1c3
+
+	column 'Bank Key'
+		dataType: string
+		isHidden
+		lineageTag: c2f3c158-1973-504c-9d98-791d9c366592
+		summarizeBy: none
+		sourceColumn: Bank Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Bank
+		dataType: string
+		lineageTag: b63efcfd-4025-5361-ac73-d552a2c5415b
+		summarizeBy: none
+		sourceColumn: Bank
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Bank Type'
+		dataType: string
+		lineageTag: 9313b7a7-1a77-5d9d-bc07-2ab140e626d3
+		summarizeBy: none
+		sourceColumn: Bank Type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimBank = m
+		mode: import
+		source =
+				// Source: data/dim_bank.csv (official NPCI statistics), embedded so the report refreshes on any computer
+				let
+				    Source = Csv.Document(Binary.Decompress(Binary.FromText("jVJbbsIwEPznFD5A1DtsXsKF2FHiVO0XcogrUqhTJQaV23fzJEAClSXLlnZnZmcnlXq/2auzleKjuTbm/KMWsQDhERvYinCfUOZSsGIjjSI21pDik1Cd5dIKj+kh35JKbU1Rkrp/sXR9p+1cC/fFar81eljmpxqhqeqhbYi4C1aPasuyyCZhE0Y5u1GU6LzQzxWFCXsFmzAQCAHrBgTr9JdMCZMGMeShk3jfvOICViSAJVJG0PauCiP3JJC7XGelnJjOAQZ9sSO1HIru8eGdxiO74DevJgCpg2dU1v3v62pfSMhjQUL4CDwmenAaUOG5VmMSCYvKkFCev5U2PV3/u+C0drcten4AGglvPUMHeWnU4SHV9UqfLrNTxt+8KPYgvpLIT6qslKxmtTqoMOoScOF0UEzZReAhd+Lwlq95zHD4nusNHM2yfJWpcojYeF0+ZfzWuaYj18W/TMNcYtDiJU41WIe5xMBVO5xpxsAkxmucJp0dK7wmFP4B", BinaryEncoding.Base64), Compression.Deflate), [Delimiter = ",", Columns = 3, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"bank_key", type text}, {"bank", type text}, {"bank_type", type text}}, "en-US"),
+				    Result = Table.RenameColumns(Typed, {{"bank_key", "Bank Key"}, {"bank", "Bank"}, {"bank_type", "Bank Type"}})
+				in
+				    Result
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
+  "pageOrder": [
+    "p1_summary",
+    "p2_market",
+    "p3_apps",
+    "p4_merchants",
+    "p5_mdr",
+    "p6_banks",
+    "p7_states",
+    "p8_about"
+  ],
+  "activePageName": "p2_market"
+}

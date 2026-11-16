@@ -1,0 +1,1383 @@
+/// All report measures, grouped in display folders by report page.
+table _Measures
+	lineageTag: fec4c795-66bc-5cd6-94f6-52f6b897a0ab
+
+	/// Month picked in the Month slicer. With nothing picked this is the latest month in the data.
+	measure 'Selected Month Index' = MAX ( DimDate[Month Index] )
+		formatString: 0
+		displayFolder: 0 Helpers
+		lineageTag: 5ef63a6c-2e1c-5871-a573-616f1b4ef6b2
+
+	measure 'Selected Month' = FORMAT ( MAX ( DimDate[Date] ), "mmmm yyyy" )
+		displayFolder: 0 Helpers
+		lineageTag: c0a625a1-320a-5483-87d5-7497d1caeb34
+
+	measure 'Selected Month Short' = FORMAT ( MAX ( DimDate[Date] ), "mmm yyyy" )
+		displayFolder: 0 Helpers
+		lineageTag: 01a31418-c543-5602-b354-c5aba00a318a
+
+	measure 'Same Month LY Label' = FORMAT ( EDATE ( MAX ( DimDate[Date] ), -12 ), "mmm yyyy" )
+		displayFolder: 0 Helpers
+		lineageTag: 1d8654da-cd84-5047-b7f8-b3142a63c621
+
+	measure 'Latest Data Month' = FORMAT ( CALCULATE ( MAX ( FactUPIMonthly[Date] ), REMOVEFILTERS ( DimDate ) ), "mmmm yyyy" )
+		displayFolder: 0 Helpers
+		lineageTag: 778bcb8d-c6f3-5045-9835-e3628c5adb45
+
+	measure 'Page Subtitle' = "Official NPCI statistics   |   Showing " & [Selected Month] & "   |   Data up to " & [Latest Data Month]
+		displayFolder: 0 Helpers
+		lineageTag: d5e8d5b0-a1fb-5130-8126-2acbbc13833c
+
+	/// Number of UPI transactions, in millions.
+	measure 'UPI Volume (Mn)' = SUM ( FactUPIMonthly[Volume Mn] )
+		formatString: #,0
+		displayFolder: 1 Market
+		lineageTag: 8a763071-1905-58dc-9dfe-f227ed4b0d57
+
+	/// Value of UPI transactions, in rupees crore.
+	measure 'UPI Value (Cr)' = SUM ( FactUPIMonthly[Value Cr] )
+		formatString: #,0
+		displayFolder: 1 Market
+		lineageTag: c95d2b7e-39e5-5862-9fbd-c4ab07d1428d
+
+	measure 'UPI Volume (Bn)' = DIVIDE ( [UPI Volume (Mn)], 1000 )
+		formatString: #,0.00
+		displayFolder: 1 Market
+		lineageTag: 92699c32-5481-5cce-a300-19f88b086814
+
+	measure 'UPI Value (Lakh Cr)' = DIVIDE ( [UPI Value (Cr)], 100000 )
+		formatString: #,0.00
+		displayFolder: 1 Market
+		lineageTag: a9301244-a700-510c-bb3d-b56ecfa9f2ee
+
+	/// Hides the launch years so the fiscal-year chart stays readable.
+	measure 'UPI Volume since FY19 (Bn)' = IF ( MAX ( DimDate[FY Start Year] ) >= 2018, [UPI Volume (Bn)] )
+		formatString: #,0.00
+		displayFolder: 1 Market
+		lineageTag: 54031b22-76d5-5dd5-a1ea-279ca51e93be
+
+	/// Average rupees per transaction. Crore / million x 10 = rupees.
+	measure 'Avg Ticket Size (₹)' = DIVIDE ( [UPI Value (Cr)], [UPI Volume (Mn)] ) * 10
+		formatString: ₹#,0
+		displayFolder: 1 Market
+		lineageTag: 3a23f0f7-a229-57e4-a296-327bb4e3a376
+
+	/// Hides the launch years (2016-2019) when tiny volumes make the average meaningless.
+	measure 'Avg Ticket Size since FY20 (₹)' = IF ( MAX ( DimDate[Date] ) >= DATE ( 2019, 4, 1 ), [Avg Ticket Size (₹)] )
+		formatString: ₹#,0
+		displayFolder: 1 Market
+		lineageTag: 890d7b9f-31ab-540d-89f1-d3a2e87314c5
+
+	measure 'Volume Bn (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [UPI Volume (Bn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0.00
+		displayFolder: 1 Market
+		lineageTag: c698c943-cf73-5b76-a694-30e3541fc006
+
+	measure 'Volume Bn (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [UPI Volume (Bn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0.00
+		displayFolder: 1 Market
+		lineageTag: 73dbbb21-b043-5846-afec-5e8b380e52cf
+
+	measure 'Volume YoY % (Month)' = DIVIDE ( [Volume Bn (Month)] - [Volume Bn (Same Month LY)], [Volume Bn (Same Month LY)] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 1 Market
+		lineageTag: 75ada912-0214-5dac-86c5-9a8e2cb628e8
+
+	measure 'Value Lakh Cr (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [UPI Value (Lakh Cr)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0.00
+		displayFolder: 1 Market
+		lineageTag: 6b73690b-a0b7-5c18-ab41-dfbb2b63a6dc
+
+	measure 'Value Lakh Cr (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [UPI Value (Lakh Cr)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0.00
+		displayFolder: 1 Market
+		lineageTag: 689070bd-f46f-5285-a315-8b71ac692daf
+
+	measure 'Value YoY % (Month)' = DIVIDE ( [Value Lakh Cr (Month)] - [Value Lakh Cr (Same Month LY)], [Value Lakh Cr (Same Month LY)] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 1 Market
+		lineageTag: 0284719c-f86b-5e5b-971e-7b9cb75aa404
+
+	measure 'Avg Ticket ₹ (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [Avg Ticket Size (₹)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: ₹#,0
+		displayFolder: 1 Market
+		lineageTag: 2221518e-2340-5a62-8200-b24a58aec47a
+
+	measure 'Avg Ticket ₹ (3 Years Earlier)' =
+			VAR _m = [Selected Month Index] - 36
+			RETURN
+			    CALCULATE ( [Avg Ticket Size (₹)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: ₹#,0
+		displayFolder: 1 Market
+		lineageTag: ba4b50cf-6edf-5e27-b3fe-ccffba7ea0f6
+
+	measure 'Daily Transactions Mn (Month)' =
+			VAR _m = [Selected Month Index]
+			VAR _d = CALCULATE ( MAX ( DimDate[Date] ), REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+			RETURN
+			    DIVIDE ( [Volume Bn (Month)] * 1000, DAY ( EOMONTH ( _d, 0 ) ) )
+		formatString: #,0
+		displayFolder: 1 Market
+		lineageTag: f0b1164c-c9b7-55ac-b5c2-6d82d8b30187
+
+	measure 'Banks Live (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( SUM ( FactUPIMonthly[Banks Live] ), REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 1 Market
+		lineageTag: ece4e25d-1828-52d5-aec3-c46281e30452
+
+	measure 'UPI Volume YoY %' =
+			VAR _m = MAX ( DimDate[Month Index] )
+			VAR _cur = [UPI Volume (Mn)]
+			VAR _ly = CALCULATE ( [UPI Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m - 12 )
+			RETURN
+			    IF ( HASONEVALUE ( DimDate[Month Index] ) && NOT ISBLANK ( _cur ) && _ly > 0, DIVIDE ( _cur - _ly, _ly ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 1 Market
+		lineageTag: 6da98d18-a6f5-5387-8337-6aab39c4be29
+
+	/// Months until 30 bn transactions a month if the latest year-on-year growth rate continues (compound, no seasonality).
+	measure 'Months to 30 Bn' =
+			VAR _v = [Volume Bn (Month)]
+			VAR _g = [Volume YoY % (Month)]
+			RETURN
+			    IF (
+			        _v >= 30, 0,
+			        IF ( _g > 0 && _v > 0, ROUNDUP ( DIVIDE ( LN ( 30 / _v ), LN ( 1 + _g ) / 12 ), 0 ) )
+			    )
+		formatString: 0
+		displayFolder: 1 Market
+		lineageTag: 5b06740a-99b7-5d0a-988b-61fb89ecb9d3
+
+	measure '30 Bn Month Projection' =
+			VAR _n = [Months to 30 Bn]
+			RETURN
+			    IF ( ISBLANK ( _n ), "n/a", IF ( _n = 0, "Reached", FORMAT ( EDATE ( MAX ( DimDate[Date] ), _n ), "mmm yyyy" ) ) )
+		displayFolder: 1 Market
+		lineageTag: 7b9ff963-310e-50bf-ae01-2f9d334223e2
+
+	measure 'App Volume (Mn)' = SUM ( FactAppMonthly[Volume Mn] )
+		formatString: #,0
+		displayFolder: 2 Apps
+		lineageTag: 626e0595-cf94-5c0b-b9a3-eee00ff0433b
+
+	measure 'App Value (Cr)' = SUM ( FactAppMonthly[Value Cr] )
+		formatString: #,0
+		displayFolder: 2 Apps
+		lineageTag: 82eb9c63-7259-51fb-8f8a-7f754bcde00c
+
+	/// Share of UPI transactions (volume) handled by the app.
+	measure 'App Market Share %' = DIVIDE ( [App Volume (Mn)], CALCULATE ( [App Volume (Mn)], REMOVEFILTERS ( DimApp ) ) )
+		formatString: 0.0%
+		displayFolder: 2 Apps
+		lineageTag: bf779cbb-a946-5931-806e-ce32f2dd3823
+
+	measure 'App Volume Mn (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [App Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 2 Apps
+		lineageTag: 38cf3623-ff20-54c0-8338-4acef5b00e57
+
+	measure 'App Volume Mn (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [App Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 2 Apps
+		lineageTag: b04dcdde-9f02-5d4b-a2c4-49f6e67ce6d8
+
+	measure 'App Share % (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [App Market Share %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.0%
+		displayFolder: 2 Apps
+		lineageTag: 3575fbc3-14bb-56bc-8e9f-ad6b377ee411
+
+	measure 'App Share % (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [App Market Share %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.0%
+		displayFolder: 2 Apps
+		lineageTag: a8df9fa7-f50f-57e3-848c-54c30a79525d
+
+	/// Growth vs the same month last year. Blank for apps that were not live a year ago.
+	measure 'App Volume YoY % (Month)' =
+			VAR _cur = [App Volume Mn (Month)]
+			VAR _ly = [App Volume Mn (Same Month LY)]
+			RETURN
+			    IF ( _ly > 1, DIVIDE ( _cur - _ly, _ly ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 2 Apps
+		lineageTag: cde63a98-e0b5-57cd-bfb3-876478ba37cf
+
+	measure 'PhonePe Share % (Month)' = CALCULATE ( [App Share % (Month)], DimApp[App] = "PhonePe" )
+		formatString: 0.0%
+		displayFolder: 2 Apps
+		lineageTag: cb5a5c29-259a-51c0-ac51-bc220c606b87
+
+	measure 'Google Pay Share % (Month)' = CALCULATE ( [App Share % (Month)], DimApp[App] = "Google Pay" )
+		formatString: 0.0%
+		displayFolder: 2 Apps
+		lineageTag: 7e6b34fb-5993-5e7e-a1ce-9f1d04a6fd8e
+
+	measure 'Top 2 Apps Share % (Month)' = CALCULATE ( [App Share % (Month)], DimApp[App] IN { "PhonePe", "Google Pay" } )
+		formatString: 0.0%
+		displayFolder: 2 Apps
+		lineageTag: fe6162c0-4b0d-55c6-835e-581eec3f832d
+
+	measure 'Top 2 Apps Share % (Same Month LY)' = CALCULATE ( [App Share % (Same Month LY)], DimApp[App] IN { "PhonePe", "Google Pay" } )
+		formatString: 0.0%
+		displayFolder: 2 Apps
+		lineageTag: 594aa626-edd2-56d0-8d49-c3f3d7c2e243
+
+	/// Herfindahl-Hirschman Index: sum of squared market shares. Above 2,500 = highly concentrated.
+	measure 'Market Concentration HHI (Month)' =
+			VAR _m = [Selected Month Index]
+			VAR _total =
+			    CALCULATE ( [App Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m, REMOVEFILTERS ( DimApp ) )
+			RETURN
+			    IF (
+			        _total > 0,
+			        SUMX (
+			            ALL ( DimApp[App] ),
+			            VAR _s = DIVIDE ( CALCULATE ( [App Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m ), _total ) * 100
+			            RETURN _s * _s
+			        )
+			    )
+		formatString: #,0
+		displayFolder: 2 Apps
+		lineageTag: 1386eb38-37b7-59b3-adb8-97085684cac0
+
+	measure 'Apps Above 30% Cap (Month)' = COUNTROWS ( FILTER ( ALL ( DimApp[App] ), [App Share % (Month)] > 0.3 ) )
+		formatString: 0
+		displayFolder: 2 Apps
+		lineageTag: 66eef861-1833-596f-8d82-a75a26f36259
+
+	/// Percentage points above (+) or below (-) NPCI's 30% volume cap.
+	measure 'Gap to 30% Cap (pts)' = IF ( NOT ISBLANK ( [App Share % (Month)] ), ( [App Share % (Month)] - 0.3 ) * 100 )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 2 Apps
+		lineageTag: 80f6f660-32d0-557f-a168-043a71858d78
+
+	/// Days until 31 Dec 2026, the 30% market-share cap deadline as last extended by NPCI (Dec 2024).
+	measure 'Days to Cap Deadline' = MAX ( 0, DATEDIFF ( TODAY (), DATE ( 2026, 12, 31 ), DAY ) )
+		formatString: 0
+		displayFolder: 2 Apps
+		lineageTag: e7b95d25-64bc-5a24-9160-5b2c6b0aa1d3
+
+	/// Monthly transactions PhonePe would have to move to other apps to get down to 30%.
+	measure 'Volume Above Cap Mn (Month)' =
+			VAR _share = [PhonePe Share % (Month)]
+			VAR _total = CALCULATE ( [App Volume Mn (Month)], REMOVEFILTERS ( DimApp ) )
+			RETURN
+			    MAX ( 0, _share - 0.3 ) * _total
+		formatString: #,0
+		displayFolder: 2 Apps
+		lineageTag: a42a945e-4b30-5fe1-af39-c95a74ed03f6
+
+	/// App with the highest year-on-year growth among apps that had at least 50 mn transactions a year earlier.
+	measure 'Fastest Growing App (Month)' =
+			VAR _t =
+			    TOPN (
+			        1,
+			        FILTER ( ALL ( DimApp[App] ), DimApp[App] <> "Others" && [App Volume Mn (Same Month LY)] >= 50 ),
+			        [App Volume YoY % (Month)], DESC
+			    )
+			RETURN
+			    IF ( COUNTROWS ( _t ) > 0, MAXX ( _t, DimApp[App] ) & " (" & FORMAT ( MAXX ( _t, [App Volume YoY % (Month)] ), "+0%" ) & ")" )
+		displayFolder: 2 Apps
+		lineageTag: 948c01d3-575e-5766-9b5b-64641ebb597e
+
+	measure 'P2x Volume (Mn)' = SUM ( FactP2PP2M[Volume Mn] )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: a68a915d-488a-5441-878a-8007c27d2e10
+
+	measure 'P2x Value (Cr)' = SUM ( FactP2PP2M[Value Cr] )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 1e12e110-9218-5a13-8440-5d9055af2788
+
+	measure 'P2M Volume (Mn)' = CALCULATE ( [P2x Volume (Mn)], FactP2PP2M[Payment Type] = "P2M" )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: e690a70e-f919-5037-a1c7-31e2099cb168
+
+	measure 'P2M Value (Cr)' = CALCULATE ( [P2x Value (Cr)], FactP2PP2M[Payment Type] = "P2M" )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: d00e6a30-dc16-5aa1-9a19-148f2f1c4829
+
+	measure 'P2P Volume (Mn)' = CALCULATE ( [P2x Volume (Mn)], FactP2PP2M[Payment Type] = "P2P" )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 3e89be61-7904-5aa6-9690-acd5978938e4
+
+	measure 'P2P Value (Cr)' = CALCULATE ( [P2x Value (Cr)], FactP2PP2M[Payment Type] = "P2P" )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 893472dc-a03e-5812-9bb3-8736f5efee35
+
+	/// Merchant (person-to-merchant) payments as a share of all UPI transactions.
+	measure 'P2M Share of Volume %' = DIVIDE ( [P2M Volume (Mn)], [P2M Volume (Mn)] + [P2P Volume (Mn)] )
+		formatString: 0.0%
+		displayFolder: 3 Merchant payments
+		lineageTag: f927300d-dee7-580c-a770-d17d66c1fc56
+
+	measure 'P2M Share of Value %' = DIVIDE ( [P2M Value (Cr)], [P2M Value (Cr)] + [P2P Value (Cr)] )
+		formatString: 0.0%
+		displayFolder: 3 Merchant payments
+		lineageTag: 390e3fc2-a32d-5c28-9ea0-1b397b020cdd
+
+	measure 'P2M Share of Volume % (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [P2M Share of Volume %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.0%
+		displayFolder: 3 Merchant payments
+		lineageTag: 4be379b4-07ae-5eee-be70-8cbd0c788118
+
+	measure 'P2M Share of Volume % (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [P2M Share of Volume %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.0%
+		displayFolder: 3 Merchant payments
+		lineageTag: 7ffa91f5-67f6-521f-ba69-3d97912ed34c
+
+	measure 'P2M Share of Value % (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [P2M Share of Value %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.0%
+		displayFolder: 3 Merchant payments
+		lineageTag: 1778ba7b-343f-589e-b134-2279e3564197
+
+	measure 'P2M Share of Value % (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [P2M Share of Value %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.0%
+		displayFolder: 3 Merchant payments
+		lineageTag: 36775c89-65fc-5925-b2f6-a212174d244f
+
+	measure 'P2M Volume Bn (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [P2M Volume (Mn)] / 1000, REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0.00
+		displayFolder: 3 Merchant payments
+		lineageTag: d40c03b6-a6a5-59bc-9e77-6183cff13e59
+
+	measure 'P2M Volume Bn (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [P2M Volume (Mn)] / 1000, REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0.00
+		displayFolder: 3 Merchant payments
+		lineageTag: 730e87cd-6b4c-5f05-b68e-351d93a9dd7f
+
+	measure 'Avg P2M Ticket ₹ (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( DIVIDE ( [P2M Value (Cr)], [P2M Volume (Mn)] ) * 10, REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: ₹#,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 41867ec6-ec44-53ec-928e-f50c3644fcec
+
+	measure 'Avg P2M Ticket ₹ (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( DIVIDE ( [P2M Value (Cr)], [P2M Volume (Mn)] ) * 10, REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: ₹#,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 1e6daf9a-cea9-5b94-b6d3-452b21cbc1e9
+
+	measure 'Avg P2P Ticket ₹ (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( DIVIDE ( [P2P Value (Cr)], [P2P Volume (Mn)] ) * 10, REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: ₹#,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 9bcb4645-196f-575b-94ff-23435914f2fc
+
+	measure 'Avg P2P Ticket ₹ (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( DIVIDE ( [P2P Value (Cr)], [P2P Volume (Mn)] ) * 10, REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: ₹#,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 1bf8503e-5abc-5a2d-ab4e-8ebe2deb0ccd
+
+	measure 'Merchant Volume (Mn)' = SUM ( FactMerchantCategory[Volume Mn] )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: d0be391a-e079-53cc-99f3-ff393d8c5741
+
+	measure 'Merchant Value (Cr)' = SUM ( FactMerchantCategory[Value Cr] )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 902c9c69-3ab7-5ea1-a983-390157b7895e
+
+	measure 'Merchant Volume Mn (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [Merchant Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 8d364514-8ffd-5a40-9990-5ca25bc38be3
+
+	measure 'Merchant Value Cr (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [Merchant Value (Cr)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: a0e64be5-dc32-5747-8a69-1989a6df0c95
+
+	measure 'Merchant Volume Mn (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [Merchant Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 55a76f70-c57b-5bce-811d-17d441ee2a3e
+
+	measure 'Merchant Volume YoY % (Month)' =
+			VAR _cur = [Merchant Volume Mn (Month)]
+			VAR _ly = [Merchant Volume Mn (Same Month LY)]
+			RETURN
+			    IF ( NOT ISBLANK ( _cur ) && _ly > 0, DIVIDE ( _cur - _ly, _ly ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 3 Merchant payments
+		lineageTag: 72956ff5-a74f-5e1e-986c-8c40d8448243
+
+	measure 'Category Avg Ticket ₹ (Month)' = DIVIDE ( [Merchant Value Cr (Month)], [Merchant Volume Mn (Month)] ) * 10
+		formatString: ₹#,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 4cfcb6af-4798-52d0-91cf-26eb4caa0d10
+
+	measure 'Named Category Volume Mn (Month)' = CALCULATE ( [Merchant Volume Mn (Month)], KEEPFILTERS ( DimMerchantCategory[MCC] <> "OTH" ) )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: c17ba454-796f-5210-8314-12f2c6b0a763
+
+	/// Merchant value excluding NPCI's 'all other categories' bucket.
+	measure 'Named Category Value Cr (Month)' = CALCULATE ( [Merchant Value Cr (Month)], KEEPFILTERS ( DimMerchantCategory[MCC] <> "OTH" ) )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 0fa980c5-0ac9-5df4-a52a-e1ef6edb729c
+
+	measure 'Named Category Avg Ticket ₹ (Month)' = CALCULATE ( [Category Avg Ticket ₹ (Month)], KEEPFILTERS ( DimMerchantCategory[MCC] <> "OTH" ) )
+		formatString: ₹#,0
+		displayFolder: 3 Merchant payments
+		lineageTag: 12c53386-e1ec-555b-a7d0-ab7d904ee407
+
+	measure 'Named Category YoY % (Month)' = CALCULATE ( [Merchant Volume YoY % (Month)], KEEPFILTERS ( DimMerchantCategory[MCC] <> "OTH" ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 3 Merchant payments
+		lineageTag: 0cf13bac-450f-5466-b6f0-b052feecf34b
+
+	/// Transactions for the 15 largest named merchant categories in the selected month.
+	measure 'Top 15 Category Volume Mn (Month)' =
+			VAR _v = [Named Category Volume Mn (Month)]
+			VAR _r =
+			    RANKX (
+			        FILTER ( ALL ( DimMerchantCategory[Category] ), NOT ISBLANK ( [Named Category Volume Mn (Month)] ) ),
+			        [Named Category Volume Mn (Month)], , DESC
+			    )
+			RETURN
+			    IF ( NOT ISBLANK ( _v ) && _r <= 15, _v )
+		formatString: #,0
+		displayFolder: 3 Merchant payments
+		lineageTag: cfaeace7-5836-540e-9393-2e2628ccf099
+
+	measure 'Top Category (Month)' =
+			VAR _t =
+			    TOPN (
+			        1,
+			        FILTER ( ALL ( DimMerchantCategory[Category] ), NOT ISBLANK ( [Named Category Volume Mn (Month)] ) ),
+			        [Named Category Volume Mn (Month)], DESC
+			    )
+			RETURN
+			    MAXX ( _t, DimMerchantCategory[Category] )
+		displayFolder: 3 Merchant payments
+		lineageTag: 39a7c6b8-812b-5cb0-8503-41629921d318
+
+	measure 'Top Category Volume Bn (Month)' =
+			VAR _t =
+			    TOPN (
+			        1,
+			        FILTER ( ALL ( DimMerchantCategory[Category] ), NOT ISBLANK ( [Named Category Volume Mn (Month)] ) ),
+			        [Named Category Volume Mn (Month)], DESC
+			    )
+			RETURN
+			    DIVIDE ( MAXX ( _t, [Named Category Volume Mn (Month)] ), 1000 )
+		formatString: #,0.00
+		displayFolder: 3 Merchant payments
+		lineageTag: 157cd2fd-e356-52e5-8038-eacf439102c4
+
+	/// Fee rate chosen in the slicer. Defaults to NPCI's 0.40%.
+	measure 'MDR Rate (Selected)' = SELECTEDVALUE ( 'MDR Rate Options'[MDR Rate], 0.004 )
+		formatString: 0.00%
+		displayFolder: 4 MDR simulator
+		lineageTag: 4adbfd1b-952b-5a6f-a7a4-b133af68e4db
+
+	/// Share of merchant payment value in transactions above Rs 2,000. Defaults to the 67% reported for Aug 2026.
+	measure 'High-Value Share (Selected)' = SELECTEDVALUE ( 'High Value Share Options'[Share], 0.67 )
+		formatString: 0%
+		displayFolder: 4 MDR simulator
+		lineageTag: 9688b400-d3e9-52a7-8b86-93181e215f39
+
+	/// Reduction for the Rs 300 cap, the Rs 5 flat fee in notified sectors and the small-merchant exemption.
+	measure 'Cap Adjustment (Selected)' = SELECTEDVALUE ( 'Cap Adjustment Options'[Adjustment], 0 )
+		formatString: 0%
+		displayFolder: 4 MDR simulator
+		lineageTag: 3bfff453-1aa5-5a59-aecf-ec8b1068a77b
+
+	measure 'P2M Value Cr (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [P2M Value (Cr)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 4 MDR simulator
+		lineageTag: 542aea23-d0eb-5d24-9cea-47b09fda4e51
+
+	measure 'P2M Value Lakh Cr (Month)' = DIVIDE ( [P2M Value Cr (Month)], 100000 )
+		formatString: #,0.00
+		displayFolder: 4 MDR simulator
+		lineageTag: e51cf2d0-9cb3-50d0-b375-c4c34c6fba2d
+
+	measure 'MDR-Eligible Value Lakh Cr (Month)' = [P2M Value Lakh Cr (Month)] * [High-Value Share (Selected)]
+		formatString: #,0.00
+		displayFolder: 4 MDR simulator
+		lineageTag: 414ce7d1-6750-594a-9556-8f2b4ecbef6a
+
+	/// Estimated merchant fee revenue for one month, in rupees crore.
+	measure 'Est. MDR Revenue Cr (Month)' = [P2M Value Cr (Month)] * [High-Value Share (Selected)] * [MDR Rate (Selected)] * ( 1 - [Cap Adjustment (Selected)] )
+		formatString: #,0
+		displayFolder: 4 MDR simulator
+		lineageTag: 094adf4c-2c4c-5d14-9548-e96f289879e7
+
+	measure 'Est. MDR Revenue Cr (Annualised)' = [Est. MDR Revenue Cr (Month)] * 12
+		formatString: #,0
+		displayFolder: 4 MDR simulator
+		lineageTag: aebdcbe9-a061-5fe3-80be-a64607d5f788
+
+	/// Revenue split using the sharing formula reported in the press (issuer 40%, acquirer 30%, app 20%, app's bank 10%).
+	measure 'MDR Revenue by Party Cr' = [Est. MDR Revenue Cr (Month)] * SUM ( 'MDR Split'[Share] )
+		formatString: #,0
+		displayFolder: 4 MDR simulator
+		lineageTag: 15d5e61c-583f-54f8-a794-35b983ddaeca
+
+	measure 'App Value Share % (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    DIVIDE (
+			        CALCULATE ( [App Value (Cr)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m ),
+			        CALCULATE ( [App Value (Cr)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m, REMOVEFILTERS ( DimApp ) )
+			    )
+		formatString: 0.0%
+		displayFolder: 4 MDR simulator
+		lineageTag: ac099baa-3885-56d3-a52a-fb61b3de674c
+
+	/// Approximation: the apps' 20% pool split by each app's share of total UPI value.
+	measure 'Est. App MDR Income Cr (Month)' = [Est. MDR Revenue Cr (Month)] * 0.2 * [App Value Share % (Month)]
+		formatString: #,0.00
+		displayFolder: 4 MDR simulator
+		lineageTag: 94b33d92-6956-5377-b3ab-f34078c84a72
+
+	measure 'Bank Volume (Mn)' = SUM ( FactBankPerformance[Volume Mn] )
+		formatString: #,0
+		displayFolder: 5 Banks
+		lineageTag: b8641710-7e10-5be9-b80e-b6b1ae47aa5e
+
+	/// Volume-weighted share of payment attempts that succeeded.
+	measure 'Approval Rate %' = DIVIDE ( SUMX ( FactBankPerformance, FactBankPerformance[Volume Mn] * FactBankPerformance[Approved %] ), [Bank Volume (Mn)] )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: ccefe2bb-5e4d-53d6-afec-36efaf183305
+
+	/// Declines caused by the customer or rules: wrong PIN, insufficient balance, limits.
+	measure 'Business Decline %' = DIVIDE ( SUMX ( FactBankPerformance, FactBankPerformance[Volume Mn] * FactBankPerformance[Business Decline %] ), [Bank Volume (Mn)] )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: 6c4d9ea1-578f-5e5c-9675-59c289fcf533
+
+	/// Declines caused by bank or NPCI system problems.
+	measure 'Technical Decline %' = DIVIDE ( SUMX ( FactBankPerformance, FactBankPerformance[Volume Mn] * FactBankPerformance[Technical Decline %] ), [Bank Volume (Mn)] )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: 87b01b5a-dea1-53e2-80e7-735629a702f8
+
+	measure 'Bank Volume Mn (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [Bank Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 5 Banks
+		lineageTag: 7435234b-cae9-5db4-b9e2-2698ea047649
+
+	measure 'Approval Rate % (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [Approval Rate %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: 46b4d096-8f01-575c-bbfd-ede440faf811
+
+	measure 'Approval Rate % (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [Approval Rate %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: 0b36039b-19cf-513d-9aa6-8d3052654db1
+
+	measure 'Business Decline % (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [Business Decline %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: 4ba98881-7182-5327-90a9-114d8ef12fb9
+
+	measure 'Business Decline % (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [Business Decline %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: 7c50504a-0a43-509b-850f-1e0cf95f89be
+
+	measure 'Technical Decline % (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [Technical Decline %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: 295c6b4c-d72d-518d-b64f-00b9af99fc29
+
+	measure 'Technical Decline % (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [Technical Decline %], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: bf65b8cf-754c-5101-b035-2017ca8e2d55
+
+	measure 'Failed Payments Mn (Month)' = [Bank Volume Mn (Month)] * ( 1 - [Approval Rate % (Month)] )
+		formatString: #,0
+		displayFolder: 5 Banks
+		lineageTag: 03d93b4f-bd32-52d3-9157-4aabb85570d4
+
+	/// Approval rate for the 15 banks with the lowest approval rate in the selected month.
+	measure 'Bottom 15 Approval Rate % (Month)' =
+			VAR _v = [Approval Rate % (Month)]
+			VAR _r =
+			    RANKX (
+			        FILTER ( ALL ( DimBank[Bank] ), NOT ISBLANK ( [Bank Volume Mn (Month)] ) ),
+			        [Approval Rate % (Month)], , ASC
+			    )
+			RETURN
+			    IF ( NOT ISBLANK ( _v ) && _r <= 15, _v )
+		formatString: 0.00%
+		displayFolder: 5 Banks
+		lineageTag: bf76b685-8377-5af0-accc-5e7babd9bce1
+
+	measure 'Lowest Approval Bank Name (Month)' =
+			VAR _t =
+			    TOPN ( 1, FILTER ( ALL ( DimBank[Bank] ), NOT ISBLANK ( [Bank Volume Mn (Month)] ) ), [Approval Rate % (Month)], ASC )
+			RETURN
+			    MAXX ( _t, DimBank[Bank] )
+		displayFolder: 5 Banks
+		lineageTag: 200bc3b8-7e3b-530f-b579-7e99114a2afe
+
+	measure 'Lowest Approval Rate % (Month)' =
+			VAR _t =
+			    TOPN ( 1, FILTER ( ALL ( DimBank[Bank] ), NOT ISBLANK ( [Bank Volume Mn (Month)] ) ), [Approval Rate % (Month)], ASC )
+			RETURN
+			    MAXX ( _t, [Approval Rate % (Month)] )
+		formatString: 0.0%
+		displayFolder: 5 Banks
+		lineageTag: 81b019ed-2fa5-581d-adf7-705308cf1613
+
+	measure 'Highest Technical Decline Bank (Month)' =
+			VAR _t =
+			    TOPN ( 1, FILTER ( ALL ( DimBank[Bank] ), NOT ISBLANK ( [Bank Volume Mn (Month)] ) ), [Technical Decline % (Month)], DESC )
+			RETURN
+			    MAXX ( _t, DimBank[Bank] ) & " (" & FORMAT ( MAXX ( _t, [Technical Decline % (Month)] ), "0.00%" ) & ")"
+		displayFolder: 5 Banks
+		lineageTag: be842fec-06bc-5199-b5a4-206ca2286653
+
+	measure 'State Volume (Mn)' = SUM ( FactStateMonthly[Volume Mn] )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: 1c95dc35-0506-5869-abe8-0e7c76f4b68b
+
+	measure 'State Value (Cr)' = SUM ( FactStateMonthly[Value Cr] )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: 595d7aa6-4f91-518a-83d6-8420025da130
+
+	measure 'State Volume Mn (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [State Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: d00ffee7-b6eb-56df-9e1a-5c432ed76b5c
+
+	measure 'State Value Cr (Month)' =
+			VAR _m = [Selected Month Index]
+			RETURN
+			    CALCULATE ( [State Value (Cr)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: ef460b13-3d2e-5dc2-becb-bebd195fbccb
+
+	measure 'State Volume Mn (Same Month LY)' =
+			VAR _m = [Selected Month Index] - 12
+			RETURN
+			    CALCULATE ( [State Volume (Mn)], REMOVEFILTERS ( DimDate ), DimDate[Month Index] = _m )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: 627bc023-ea98-5f0f-9c1f-695d1eaa03fe
+
+	/// Transactions NPCI could assign to a state.
+	measure 'Located Volume Mn (Month)' = CALCULATE ( [State Volume Mn (Month)], KEEPFILTERS ( DimState[Classified] = "Yes" ) )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: b8897950-da87-5560-a311-84f350c88001
+
+	measure 'All Located Volume Mn (Month)' = CALCULATE ( [State Volume Mn (Month)], REMOVEFILTERS ( DimState ), DimState[Classified] = "Yes" )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: 7e43e3c3-9462-531a-80b4-37eb8f7bba1e
+
+	measure 'All Located Volume Mn (Same Month LY)' = CALCULATE ( [State Volume Mn (Same Month LY)], REMOVEFILTERS ( DimState ), DimState[Classified] = "Yes" )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: 8e42f60c-e317-5c64-b5d3-46f1298111e1
+
+	measure 'Located Volume Bn (Month)' = [All Located Volume Mn (Month)] / 1000
+		formatString: #,0.00
+		displayFolder: 6 States
+		lineageTag: dc54a40e-8abb-54aa-8fd5-c9a51950b929
+
+	measure 'State Share of Located %' = DIVIDE ( [Located Volume Mn (Month)], [All Located Volume Mn (Month)] )
+		formatString: 0.0%
+		displayFolder: 6 States
+		lineageTag: 126befd2-f780-5d92-9ff6-13a6f8ba0617
+
+	/// Share of transactions NPCI reports without a state.
+	measure 'Unclassified Share % (Month)' =
+			DIVIDE (
+			    CALCULATE ( [State Volume Mn (Month)], REMOVEFILTERS ( DimState ), DimState[Classified] = "No" ),
+			    CALCULATE ( [State Volume Mn (Month)], REMOVEFILTERS ( DimState ) )
+			)
+		formatString: 0.0%
+		displayFolder: 6 States
+		lineageTag: 3426aafe-9ce8-51e8-a667-b90835e8779f
+
+	measure 'State YoY % (Month)' =
+			VAR _cur = [Located Volume Mn (Month)]
+			VAR _ly = CALCULATE ( [State Volume Mn (Same Month LY)], KEEPFILTERS ( DimState[Classified] = "Yes" ) )
+			RETURN
+			    IF ( NOT ISBLANK ( _cur ) && _ly > 0, DIVIDE ( _cur - _ly, _ly ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6 States
+		lineageTag: bac53729-c945-546f-8712-f2ad3223734f
+
+	measure 'State Avg Ticket ₹ (Month)' = CALCULATE ( DIVIDE ( [State Value Cr (Month)], [State Volume Mn (Month)] ) * 10, KEEPFILTERS ( DimState[Classified] = "Yes" ) )
+		formatString: ₹#,0
+		displayFolder: 6 States
+		lineageTag: 6a9958f7-8f41-5392-9d6d-d6d348d05cb4
+
+	measure 'Top State (Month)' =
+			VAR _t = TOPN ( 1, FILTER ( ALL ( DimState ), DimState[Classified] = "Yes" ), [State Volume Mn (Month)], DESC )
+			RETURN
+			    MAXX ( _t, DimState[State Name] )
+		displayFolder: 6 States
+		lineageTag: 38caa3b1-6c6f-52c1-885f-178d45a1c0a3
+
+	measure 'Top State Share % (Month)' =
+			VAR _t = TOPN ( 1, FILTER ( ALL ( DimState ), DimState[Classified] = "Yes" ), [State Volume Mn (Month)], DESC )
+			RETURN
+			    DIVIDE ( SUMX ( _t, [State Volume Mn (Month)] ), [All Located Volume Mn (Month)] )
+		formatString: 0.0%
+		displayFolder: 6 States
+		lineageTag: 27009069-a3cf-5f94-9de4-8f42b2325cbe
+
+	measure 'Top 5 States Share % (Month)' =
+			VAR _t = TOPN ( 5, FILTER ( ALL ( DimState ), DimState[Classified] = "Yes" ), [State Volume Mn (Month)], DESC )
+			RETURN
+			    DIVIDE ( SUMX ( _t, [State Volume Mn (Month)] ), [All Located Volume Mn (Month)] )
+		formatString: 0.0%
+		displayFolder: 6 States
+		lineageTag: 69f5b815-d351-5608-913a-cff3c96a19cf
+
+	measure 'Top 15 State Volume Mn (Month)' =
+			VAR _v = [Located Volume Mn (Month)]
+			VAR _r =
+			    RANKX (
+			        FILTER ( ALL ( DimState[State Name], DimState[Classified] ), DimState[Classified] = "Yes" ),
+			        [Located Volume Mn (Month)], , DESC
+			    )
+			RETURN
+			    IF ( NOT ISBLANK ( _v ) && _r <= 15, _v )
+		formatString: #,0
+		displayFolder: 6 States
+		lineageTag: 5c711503-2585-5d96-8239-ae765d4ef43d
+
+	/// Average payment for the 10 states with the most transactions.
+	measure 'Top 10 State Avg Ticket ₹ (Month)' =
+			VAR _v = [Located Volume Mn (Month)]
+			VAR _r =
+			    RANKX (
+			        FILTER ( ALL ( DimState[State Name], DimState[Classified] ), DimState[Classified] = "Yes" ),
+			        [Located Volume Mn (Month)], , DESC
+			    )
+			RETURN
+			    IF ( NOT ISBLANK ( _v ) && _r <= 10, [State Avg Ticket ₹ (Month)] )
+		formatString: ₹#,0
+		displayFolder: 6 States
+		lineageTag: 61c6fdae-6fa9-52c9-9243-7b718ca9beca
+
+	/// State with the highest average payment among states with at least 100 mn transactions in the month.
+	measure 'Highest Avg Payment State (Month)' =
+			VAR _t =
+			    TOPN (
+			        1,
+			        FILTER ( ALL ( DimState ), DimState[Classified] = "Yes" && [State Volume Mn (Month)] >= 100 ),
+			        [State Avg Ticket ₹ (Month)], DESC
+			    )
+			RETURN
+			    MAXX ( _t, DimState[State Name] )
+		displayFolder: 6 States
+		lineageTag: c1691695-705a-596d-a2af-e4454122fbcf
+
+	measure 'Highest Avg Payment ₹ (Month)' =
+			VAR _t =
+			    TOPN (
+			        1,
+			        FILTER ( ALL ( DimState ), DimState[Classified] = "Yes" && [State Volume Mn (Month)] >= 100 ),
+			        [State Avg Ticket ₹ (Month)], DESC
+			    )
+			RETURN
+			    MAXX ( _t, [State Avg Ticket ₹ (Month)] )
+		formatString: ₹#,0
+		displayFolder: 6 States
+		lineageTag: 600a9a83-be63-569a-adfc-f2151721feed
+
+	measure 'Market Headline' =
+			VAR _old = [Avg Ticket ₹ (3 Years Earlier)]
+			RETURN
+			    "UPI processed " & FORMAT ( [Volume Bn (Month)], "0.00" ) & " bn payments (₹"
+			        & FORMAT ( [Value Lakh Cr (Month)], "0.00" ) & " lakh crore) in " & [Selected Month] & ", "
+			        & FORMAT ( [Volume YoY % (Month)], "+0.0%;-0.0%" ) & " on a year ago. Average payment: ₹"
+			        & FORMAT ( [Avg Ticket ₹ (Month)], "#,0" ) & IF ( ISBLANK ( _old ), ".", ", vs ₹" & FORMAT ( _old, "#,0" ) & " three years earlier." )
+		displayFolder: 7 Text for the report
+		lineageTag: 645f48bc-aa00-5490-b5b2-bd8de31b73a0
+
+	measure 'Competition Headline' =
+			IF (
+			    ISBLANK ( [Top 2 Apps Share % (Month)] ),
+			    "App-level data starts in April 2023. Pick a later month.",
+			    "PhonePe + Google Pay = " & FORMAT ( [Top 2 Apps Share % (Month)], "0.0%" )
+			        & " of UPI payments (HHI " & FORMAT ( [Market Concentration HHI (Month)], "#,0" )
+			        & IF ( [Market Concentration HHI (Month)] > 2500, ": highly concentrated", ": moderately concentrated" )
+			        & "). To meet the 30% cap, PhonePe must shift "
+			        & FORMAT ( [Volume Above Cap Mn (Month)] / 1000, "0.0" ) & " bn payments a month."
+			)
+		displayFolder: 7 Text for the report
+		lineageTag: 0e63a8c7-f20c-5864-987c-367bc47d4f37
+
+	measure 'Merchant Headline' =
+			IF (
+			    ISBLANK ( [P2M Share of Volume % (Month)] ),
+			    "Merchant data starts in April 2020. Pick a later month.",
+			    "Merchant payments are " & FORMAT ( [P2M Share of Volume % (Month)], "0%" ) & " of UPI transactions but only "
+			        & FORMAT ( [P2M Share of Value % (Month)], "0%" ) & " of the money: a typical shop payment is ₹"
+			        & FORMAT ( [Avg P2M Ticket ₹ (Month)], "#,0" ) & " vs ₹" & FORMAT ( [Avg P2P Ticket ₹ (Month)], "#,0" )
+			        & " for person-to-person transfers."
+			)
+		displayFolder: 7 Text for the report
+		lineageTag: 77c35fab-1b8d-556b-b58b-f2f0e9891241
+
+	measure 'MDR Headline' =
+			"A " & FORMAT ( [MDR Rate (Selected)], "0.00%" ) & " fee on the " & FORMAT ( [High-Value Share (Selected)], "0%" )
+			    & " of merchant value above ₹2,000 would earn about ₹" & FORMAT ( [Est. MDR Revenue Cr (Month)], "#,0" )
+			    & " crore a month (₹" & FORMAT ( [Est. MDR Revenue Cr (Annualised)], "#,0" ) & " crore a year). Person-to-person payments stay free."
+		displayFolder: 7 Text for the report
+		lineageTag: 9b1d6a4c-fc4f-5542-bc2d-4360898742e1
+
+	measure 'Bank Headline' =
+			IF (
+			    ISBLANK ( [Bank Volume Mn (Month)] ),
+			    "Bank performance data starts in April 2025. Pick a later month.",
+			    "In " & [Selected Month] & ", " & FORMAT ( [Approval Rate % (Month)], "0.0%" )
+			        & " of payments from the top 20 banks succeeded. Business declines (PIN, limits, balance): "
+			        & FORMAT ( [Business Decline % (Month)], "0.0%" ) & ". Bank system failures: " & FORMAT ( [Technical Decline % (Month)], "0.00%" ) & "."
+			)
+		displayFolder: 7 Text for the report
+		lineageTag: ff2788e4-f84d-5bda-afe8-2317d4f06755
+
+	measure 'Geography Headline' =
+			IF (
+			    ISBLANK ( [All Located Volume Mn (Month)] ),
+			    "State data starts in April 2025. Pick a later month.",
+			    [Top State (Month)] & " has " & FORMAT ( [Top State Share % (Month)], "0.0%" )
+			        & " of located UPI payments and the top 5 states " & FORMAT ( [Top 5 States Share % (Month)], "0%" )
+			        & ". " & FORMAT ( [Unclassified Share % (Month)], "0%" ) & " of payments carry no state tag in NPCI data."
+			)
+		displayFolder: 7 Text for the report
+		lineageTag: 27a74c8d-cfbe-511d-b4c8-91c79ffd6706
+
+	measure 'Insight Growth' =
+			VAR _old = [Avg Ticket ₹ (3 Years Earlier)]
+			VAR _n = [Months to 30 Bn]
+			RETURN
+			    IF (
+			        ISBLANK ( [Volume Bn (Month)] ),
+			        "No UPI data for this month.",
+			        "UPI handled " & FORMAT ( [Volume Bn (Month)], "0.00" ) & " bn payments worth ₹" & FORMAT ( [Value Lakh Cr (Month)], "0.00" )
+			            & " lakh crore in " & [Selected Month] & ", " & FORMAT ( [Volume YoY % (Month)], "+0.0%;-0.0%" )
+			            & " on a year earlier and about " & FORMAT ( [Daily Transactions Mn (Month)], "#,0" ) & " mn a day. "
+			            & "The average payment is ₹" & FORMAT ( [Avg Ticket ₹ (Month)], "#,0" )
+			            & IF ( ISBLANK ( _old ), "", " (₹" & FORMAT ( _old, "#,0" ) & " three years earlier)" )
+			            & " as small everyday payments move to UPI. "
+			            & IF (
+			                ISBLANK ( _n ), "",
+			                IF ( _n = 0, "UPI is already above 30 bn payments a month.",
+			                    "At this growth rate UPI reaches 30 bn payments a month around " & [30 Bn Month Projection] & "." )
+			            )
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: a043e161-9243-5d9b-88c1-85bad7095ed1
+
+	measure 'Insight Competition' =
+			VAR _fast = [Fastest Growing App (Month)]
+			RETURN
+			    IF (
+			        ISBLANK ( [Top 2 Apps Share % (Month)] ),
+			        "App-level data starts in April 2023. Pick a later month.",
+			        "PhonePe (" & FORMAT ( [PhonePe Share % (Month)], "0.0%" ) & ") and Google Pay ("
+			            & FORMAT ( [Google Pay Share % (Month)], "0.0%" ) & ") process " & FORMAT ( [Top 2 Apps Share % (Month)], "0.0%" )
+			            & " of UPI payments"
+			            & IF (
+			                ISBLANK ( [Top 2 Apps Share % (Same Month LY)] ), "",
+			                ", " & IF ( [Top 2 Apps Share % (Month)] < [Top 2 Apps Share % (Same Month LY)], "down ", "up " )
+			                    & FORMAT ( ABS ( [Top 2 Apps Share % (Month)] - [Top 2 Apps Share % (Same Month LY)] ) * 100, "0.0" ) & " pts in a year"
+			            )
+			            & " (HHI " & FORMAT ( [Market Concentration HHI (Month)], "#,0" )
+			            & IF ( [Market Concentration HHI (Month)] > 2500, ", highly concentrated). ", ", moderately concentrated). " )
+			            & "To meet NPCI's 30% cap by 31 Dec 2026, PhonePe would need to move "
+			            & FORMAT ( [Volume Above Cap Mn (Month)] / 1000, "0.0" ) & " bn payments a month to rivals."
+			            & IF ( ISBLANK ( _fast ), "", " Fastest-growing challenger: " & _fast & "." )
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: c9a0f982-1123-5eda-8833-2cba602c0a04
+
+	measure 'Insight Merchants' =
+			VAR _cat = [Top Category (Month)]
+			RETURN
+			    IF (
+			        ISBLANK ( [P2M Share of Volume % (Month)] ),
+			        "Merchant data starts in April 2020. Pick a later month.",
+			        "Merchant payments are " & FORMAT ( [P2M Share of Volume % (Month)], "0%" ) & " of UPI transactions but only "
+			            & FORMAT ( [P2M Share of Value % (Month)], "0%" ) & " of the value. A typical shop payment is ₹"
+			            & FORMAT ( [Avg P2M Ticket ₹ (Month)], "#,0" ) & ", against ₹" & FORMAT ( [Avg P2P Ticket ₹ (Month)], "#,0" )
+			            & " for person-to-person transfers."
+			            & IF ( ISBLANK ( _cat ), "", " Biggest category: " & _cat & " with " & FORMAT ( [Top Category Volume Bn (Month)], "0.0" ) & " bn payments." )
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: 55d35769-89e1-56c4-8eff-5ff73f4acd31
+
+	measure 'Insight MDR' =
+			VAR _m = [Est. MDR Revenue Cr (Month)]
+			RETURN
+			    IF (
+			        ISBLANK ( _m ),
+			        "Merchant data starts in April 2020. Pick a later month.",
+			        "NPCI's new merchant fee (0.4% on payments above ₹2,000, from 15 Oct 2026) would earn about ₹" & FORMAT ( _m, "#,0" )
+			            & " crore a month at " & [Selected Month Short] & " volumes, or ₹" & FORMAT ( _m * 12, "#,0" ) & " crore a year. "
+			            & "On the split reported in the press, customers' banks would get about ₹" & FORMAT ( _m * 0.4, "#,0" )
+			            & " crore and UPI apps ₹" & FORMAT ( _m * 0.2, "#,0" ) & " crore a month. Person-to-person payments stay free."
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: 2b2338fa-8ebe-5820-90d3-425dcf0745ef
+
+	measure 'Insight Banks' =
+			IF (
+			    ISBLANK ( [Bank Volume Mn (Month)] ),
+			    "Bank performance data starts in April 2025. Pick a later month.",
+			    FORMAT ( [Approval Rate % (Month)], "0.0%" ) & " of payment attempts from the 20 largest banks succeeded in " & [Selected Month]
+			        & ". Most failures are business declines such as a wrong PIN, low balance or daily limits ("
+			        & FORMAT ( [Business Decline % (Month)], "0.0%" ) & "); bank system failures are rare ("
+			        & FORMAT ( [Technical Decline % (Month)], "0.00%" ) & "). Lowest approval rate: " & [Lowest Approval Bank Name (Month)]
+			        & " (" & FORMAT ( [Lowest Approval Rate % (Month)], "0.0%" ) & ")."
+			)
+		displayFolder: 7 Text for the report
+		lineageTag: 24849b02-2b53-57b7-b2ae-1ac0c0494753
+
+	measure 'Insight States' =
+			IF (
+			    ISBLANK ( [All Located Volume Mn (Month)] ),
+			    "State data starts in April 2025. Pick a later month.",
+			    [Top State (Month)] & " leads with " & FORMAT ( [Top State Share % (Month)], "0.0%" )
+			        & " of UPI payments that have a location, and the top 5 states hold " & FORMAT ( [Top 5 States Share % (Month)], "0%" )
+			        & ". Highest average payment among large states: " & [Highest Avg Payment State (Month)]
+			        & " (₹" & FORMAT ( [Highest Avg Payment ₹ (Month)], "#,0" ) & "). "
+			        & FORMAT ( [Unclassified Share % (Month)], "0%" ) & " of payments carry no state tag and are left out of state shares."
+			)
+		displayFolder: 7 Text for the report
+		lineageTag: b1f7af03-1446-521a-937c-12cfb5a95dd7
+
+	measure 'Sub Volume' =
+			VAR _cur = [Volume Bn (Month)]
+			VAR _ly = [Volume Bn (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ) || _ly = 0,
+			        "No data a year earlier",
+			        VAR _g = DIVIDE ( _cur - _ly, _ly )
+			        RETURN IF ( _g >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _g ), "0.0%" ) & " vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: b000a702-4e39-505f-83f1-1ab26e9a1d2f
+
+	measure 'Sub Value' =
+			VAR _cur = [Value Lakh Cr (Month)]
+			VAR _ly = [Value Lakh Cr (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ) || _ly = 0,
+			        "No data a year earlier",
+			        VAR _g = DIVIDE ( _cur - _ly, _ly )
+			        RETURN IF ( _g >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _g ), "0.0%" ) & " vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: ed11af3d-f6ec-5b61-ab46-830702a374e5
+
+	measure 'Sub Ticket' =
+			VAR _o = [Avg Ticket ₹ (3 Years Earlier)]
+			RETURN
+			    IF ( ISBLANK ( _o ), "Average rupees per payment", "₹" & FORMAT ( _o, "#,0" ) & " three years earlier" )
+		displayFolder: 7 Text for the report
+		lineageTag: e050e3a7-9583-5259-a8cc-11eb2c38d672
+
+	measure 'Sub Daily' = "Banks live on UPI: " & FORMAT ( [Banks Live (Month)], "#,0" )
+		displayFolder: 7 Text for the report
+		lineageTag: dbe001a3-0ca0-5497-a1e9-82de78768380
+
+	measure 'Sub Projection' =
+			VAR _g = [Volume YoY % (Month)]
+			RETURN
+			    IF (
+			        [Volume Bn (Month)] >= 30, "Already above 30 bn a month",
+			        IF ( _g > 0, "If " & FORMAT ( _g, "0.0%" ) & " yearly growth continues", "Needs positive growth" )
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: 5f8344a6-46e7-5fe6-aee5-27604e835dad
+
+	measure 'Sub PhonePe' =
+			VAR _s = [PhonePe Share % (Month)]
+			RETURN
+			    IF ( ISBLANK ( _s ), "", FORMAT ( ABS ( _s - 0.3 ) * 100, "0.0" ) & " pts " & IF ( _s > 0.3, "above", "below" ) & " the 30% cap" )
+		displayFolder: 7 Text for the report
+		lineageTag: 9676760e-ae24-511b-b13a-f52889f215e1
+
+	measure 'Sub Google Pay' =
+			VAR _s = [Google Pay Share % (Month)]
+			RETURN
+			    IF ( ISBLANK ( _s ), "", FORMAT ( ABS ( _s - 0.3 ) * 100, "0.0" ) & " pts " & IF ( _s > 0.3, "above", "below" ) & " the 30% cap" )
+		displayFolder: 7 Text for the report
+		lineageTag: 99dbd308-9a4c-54d0-839a-c54995952bb9
+
+	measure 'Sub Top 2' =
+			VAR _cur = [Top 2 Apps Share % (Month)]
+			VAR _ly = [Top 2 Apps Share % (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ),
+			        "No data a year earlier",
+			        VAR _d = ( _cur - _ly ) * 100
+			        RETURN IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: c761a658-7599-5ea5-a21b-c840c11ed914
+
+	measure 'Sub HHI' = IF ( [Market Concentration HHI (Month)] > 2500, "Highly concentrated (above 2,500)", "Moderately concentrated" )
+		displayFolder: 7 Text for the report
+		lineageTag: 6f8ce2c6-4b49-56d4-9ee9-99095d1907af
+
+	measure 'Sub Days' = "Cap deadline: 31 Dec 2026"
+		displayFolder: 7 Text for the report
+		lineageTag: fee661e4-4821-5391-bbdd-ee1fe6068ed7
+
+	measure 'Sub P2M Vol Share' =
+			VAR _cur = [P2M Share of Volume % (Month)]
+			VAR _ly = [P2M Share of Volume % (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ),
+			        "No data a year earlier",
+			        VAR _d = ( _cur - _ly ) * 100
+			        RETURN IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: 2359c4af-4d31-52f4-80a9-2bd93a5019fd
+
+	measure 'Sub P2M Val Share' =
+			VAR _cur = [P2M Share of Value % (Month)]
+			VAR _ly = [P2M Share of Value % (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ),
+			        "No data a year earlier",
+			        VAR _d = ( _cur - _ly ) * 100
+			        RETURN IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: 18dd77d4-be96-5a23-b8ae-315dce3720c8
+
+	measure 'Sub P2M Volume' =
+			VAR _cur = [P2M Volume Bn (Month)]
+			VAR _ly = [P2M Volume Bn (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ) || _ly = 0,
+			        "No data a year earlier",
+			        VAR _g = DIVIDE ( _cur - _ly, _ly )
+			        RETURN IF ( _g >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _g ), "0.0%" ) & " vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: 881c4321-1471-5bfc-a2ce-fa6b28d80762
+
+	measure 'Sub P2M Ticket' =
+			VAR _o = [Avg P2M Ticket ₹ (Same Month LY)]
+			RETURN
+			    IF ( ISBLANK ( _o ), "", "₹" & FORMAT ( _o, "#,0" ) & " in " & [Same Month LY Label] )
+		displayFolder: 7 Text for the report
+		lineageTag: 784a82b1-615d-5f1d-9d54-3f486fdcb357
+
+	measure 'Sub P2P Ticket' =
+			VAR _o = [Avg P2P Ticket ₹ (Same Month LY)]
+			RETURN
+			    IF ( ISBLANK ( _o ), "", "₹" & FORMAT ( _o, "#,0" ) & " in " & [Same Month LY Label] )
+		displayFolder: 7 Text for the report
+		lineageTag: 6db31bd8-8c45-596b-a651-7737bafeec79
+
+	measure 'Sub MDR Value' = "Merchant payments in " & [Selected Month Short]
+		displayFolder: 7 Text for the report
+		lineageTag: b0d2f752-a09b-5cfb-846b-9edb47f0f457
+
+	measure 'Sub MDR Eligible' = FORMAT ( [High-Value Share (Selected)], "0%" ) & " of it is in payments above ₹2,000"
+		displayFolder: 7 Text for the report
+		lineageTag: ae77d5d2-c350-5c95-8104-55a9375e35d4
+
+	measure 'Sub MDR Month' =
+			"At a " & FORMAT ( [MDR Rate (Selected)], "0.00%" ) & " fee"
+			    & IF ( [Cap Adjustment (Selected)] > 0, ", less " & FORMAT ( [Cap Adjustment (Selected)], "0%" ) & " for caps and exemptions", "" )
+		displayFolder: 7 Text for the report
+		lineageTag: eb64e7f9-70da-59d6-adaa-54ed9ba708e3
+
+	measure 'Sub MDR Year' = "12 × the monthly estimate"
+		displayFolder: 7 Text for the report
+		lineageTag: 1e19bca3-2ffb-5c1f-8e06-f2e052419b55
+
+	measure 'Sub Approval' =
+			VAR _cur = [Approval Rate % (Month)]
+			VAR _ly = [Approval Rate % (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ),
+			        "No data a year earlier",
+			        VAR _d = ( _cur - _ly ) * 100
+			        RETURN IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: b3e28e16-011b-5def-98b7-7c8167e21890
+
+	measure 'Sub BD' =
+			VAR _cur = [Business Decline % (Month)]
+			VAR _ly = [Business Decline % (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ),
+			        "No data a year earlier",
+			        VAR _d = ( _cur - _ly ) * 100
+			        RETURN IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: 0feef47f-edac-5ded-ba91-d733e781ac98
+
+	measure 'Sub TD' =
+			VAR _cur = [Technical Decline % (Month)]
+			VAR _ly = [Technical Decline % (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ),
+			        "No data a year earlier",
+			        VAR _d = ( _cur - _ly ) * 100
+			        RETURN IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.00" ) & " pts vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: baaea8ba-8516-59a3-b131-93930bc5dd09
+
+	measure 'Sub Failed' = "Out of " & FORMAT ( [Bank Volume Mn (Month)] / 1000, "0.0" ) & " bn payment attempts"
+		displayFolder: 7 Text for the report
+		lineageTag: edd1853d-fe99-5696-b9ad-ea44e577920a
+
+	measure 'Sub Lowest Approval' = "Approval rate: " & FORMAT ( [Lowest Approval Rate % (Month)], "0.0%" )
+		displayFolder: 7 Text for the report
+		lineageTag: 98f30a68-a622-51cb-b3eb-b2bf7df4b00c
+
+	measure 'Sub Top State' = FORMAT ( [Top State Share % (Month)], "0.0%" ) & " of payments with a state tag"
+		displayFolder: 7 Text for the report
+		lineageTag: 5ee00671-3c75-5579-ab7e-c6468d10202a
+
+	measure 'Sub Top 5' = "Of 36 states and union territories"
+		displayFolder: 7 Text for the report
+		lineageTag: a6449a62-aa58-5c15-b664-c818913d4c37
+
+	measure 'Sub Located' =
+			VAR _cur = [All Located Volume Mn (Month)]
+			VAR _ly = [All Located Volume Mn (Same Month LY)]
+			RETURN
+			    IF (
+			        ISBLANK ( _cur ) || ISBLANK ( _ly ) || _ly = 0,
+			        "No data a year earlier",
+			        VAR _g = DIVIDE ( _cur - _ly, _ly )
+			        RETURN IF ( _g >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _g ), "0.0%" ) & " vs " & [Same Month LY Label]
+			    )
+		displayFolder: 7 Text for the report
+		lineageTag: d268512e-966a-54a9-85a0-b41946708192
+
+	measure 'Sub Highest Avg' = "₹" & FORMAT ( [Highest Avg Payment ₹ (Month)], "#,0" ) & " a payment (100 mn+ states)"
+		displayFolder: 7 Text for the report
+		lineageTag: 84568d76-4f6e-5b7b-a1de-aad9d948938b
+
+	measure 'Sub Unclassified' = "Left out of state shares"
+		displayFolder: 7 Text for the report
+		lineageTag: 9a505a06-d56b-5bcd-ab4d-dee11dfe98ed
+
+	measure 'Color Neutral' = "#5B6475"
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 2c8ce7c4-e4cb-56ba-9040-39aad806bd0b
+
+	measure 'Color Volume' = VAR _v = [Volume YoY % (Month)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#006300", "#D03B3B" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 7d5d9061-122e-5fb6-abd6-bcccf85c25ed
+
+	measure 'Color Value' = VAR _v = [Value YoY % (Month)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#006300", "#D03B3B" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: b7f62d2c-aa9f-5a9e-b8a2-f156fb4d9c7b
+
+	measure 'Color PhonePe' = IF ( [PhonePe Share % (Month)] > 0.3, "#D03B3B", "#006300" )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 1c78a622-0bc9-5eff-b2e6-86e798e8daa9
+
+	measure 'Color Google Pay' = IF ( [Google Pay Share % (Month)] > 0.3, "#D03B3B", "#006300" )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 2fcfe35a-cb64-56ff-bb09-43fe9b03de48
+
+	measure 'Color HHI' = IF ( [Market Concentration HHI (Month)] > 2500, "#D03B3B", "#5B6475" )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 98e3aeeb-e34b-5b2e-8878-f21deb6e63c5
+
+	measure 'Color P2M Vol Share' = VAR _v = [P2M Share of Volume % (Month)] - [P2M Share of Volume % (Same Month LY)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#006300", "#D03B3B" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 44de1b58-8196-5ec8-ab0b-67c99fcba355
+
+	measure 'Color P2M Val Share' = VAR _v = [P2M Share of Value % (Month)] - [P2M Share of Value % (Same Month LY)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#006300", "#D03B3B" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: a56608b3-bf03-569b-9e82-2f27497a7b72
+
+	measure 'Color P2M Volume' = VAR _v = [P2M Volume Bn (Month)] - [P2M Volume Bn (Same Month LY)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#006300", "#D03B3B" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 8ac2219f-d2cd-5dea-8fbe-f4fc99afe37e
+
+	measure 'Color Approval' = VAR _v = [Approval Rate % (Month)] - [Approval Rate % (Same Month LY)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#006300", "#D03B3B" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 3e3f636c-25b8-5986-86c7-c077a3efd67b
+
+	measure 'Color BD' = VAR _v = [Business Decline % (Month)] - [Business Decline % (Same Month LY)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#D03B3B", "#006300" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: ecff0b29-860d-5e99-a77f-e527594d4a5c
+
+	measure 'Color TD' = VAR _v = [Technical Decline % (Month)] - [Technical Decline % (Same Month LY)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#D03B3B", "#006300" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 95cb3462-2276-528d-ac21-2661950dbec6
+
+	measure 'Color Located' = VAR _v = [All Located Volume Mn (Month)] - [All Located Volume Mn (Same Month LY)] RETURN IF ( ISBLANK ( _v ), "#5B6475", IF ( _v >= 0, "#006300", "#D03B3B" ) )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 2fbbdc39-84e9-5699-8bb1-ace8a8f6260b
+
+	/// Red bars for apps above NPCI's 30% cap.
+	measure 'Color Cap Bar' = IF ( [App Share % (Month)] > 0.3, "#D03B3B", "#2A78D6" )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 4a4abf14-1530-5b14-b5c9-158b809d470c
+
+	measure 'Color Growth Bar' = IF ( [App Volume YoY % (Month)] < 0, "#D03B3B", "#0CA30C" )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: b9499f40-f187-5b77-a0c3-ccd1526b6836
+
+	measure 'Color Category Growth' = IF ( [Merchant Volume YoY % (Month)] < 0, "#D03B3B", "#006300" )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 38eecd49-177f-556d-8577-fe40264b9a4a
+
+	measure 'Color State Growth' = IF ( [State YoY % (Month)] < 0, "#D03B3B", "#006300" )
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: cb4235b7-3f22-5bf5-b84f-eea0d583c0e1
+
+	/// Same colour per bank type as the legend of the scatter and trend charts.
+	measure 'Color Bank Type' =
+			SWITCH (
+			    SELECTEDVALUE ( DimBank[Bank Type] ),
+			    "Payments bank", "#2A78D6",
+			    "Private bank", "#EB6834",
+			    "Public sector bank", "#1BAF7A",
+			    "#8A93A6"
+			)
+		displayFolder: 8 Colours for conditional formatting
+		lineageTag: 0ac45284-a2f7-59b2-a958-120a4dda9578
+
+	column Dummy
+		dataType: int64
+		isHidden
+		lineageTag: 73f356b7-a76e-55c6-9082-8aafb7962722
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Dummy]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW ( "Dummy", 0 )
+
+	annotation PBI_ResultType = Table
+

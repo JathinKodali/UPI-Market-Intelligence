@@ -1,0 +1,222 @@
+{
+  "algorithm": "Ridge regression",
+  "implementation": "NumPy normal equations",
+  "target": "Monthly UPI transaction volume in billions",
+  "features": [
+    "lag_1_bn",
+    "lag_2_bn",
+    "lag_3_bn",
+    "lag_12_bn",
+    "month_index",
+    "month_sin",
+    "month_cos"
+  ],
+  "source_sha256": "e119809e7c1fdc42a9bca47b2f4b1c62571de811342e2f75271cbf41bdfc2a98",
+  "source_rows": 125,
+  "supervised_rows": 113,
+  "alpha": 10.0,
+  "alpha_selection": [
+    {
+      "alpha": 0.01,
+      "mean_validation_rmse_bn": 1.0835067731914796
+    },
+    {
+      "alpha": 0.1,
+      "mean_validation_rmse_bn": 1.0521248194997843
+    },
+    {
+      "alpha": 1.0,
+      "mean_validation_rmse_bn": 0.881270941582742
+    },
+    {
+      "alpha": 10.0,
+      "mean_validation_rmse_bn": 0.4679277529715473
+    },
+    {
+      "alpha": 100.0,
+      "mean_validation_rmse_bn": 4.188768898555896
+    }
+  ],
+  "test_training_first_target": "2017-04-01",
+  "test_training_last_target": "2025-08-01",
+  "test_training_rows": 101,
+  "test_period": [
+    "2025-09-01",
+    "2026-08-01"
+  ],
+  "test_rows": 12,
+  "test_method": "12-step recursive, held-out future months",
+  "metrics": {
+    "mae_bn": 0.3364466743644723,
+    "rmse_bn": 0.4623099735348198,
+    "mape_pct": 1.5595695497052464
+  },
+  "seasonal_naive_metrics": {
+    "mae_bn": 4.493519999999999,
+    "rmse_bn": 4.500919791250079,
+    "mape_pct": 20.558759759997344
+  },
+  "test_results": [
+    {
+      "date": "2025-09-01",
+      "actual_bn": 19.63343,
+      "predicted_bn": 19.92704381571965,
+      "seasonal_naive_bn": 15.04175
+    },
+    {
+      "date": "2025-10-01",
+      "actual_bn": 20.70092,
+      "predicted_bn": 20.759900780640532,
+      "seasonal_naive_bn": 16.584970000000002
+    },
+    {
+      "date": "2025-11-01",
+      "actual_bn": 20.46698,
+      "predicted_bn": 20.70494005183227,
+      "seasonal_naive_bn": 15.48202
+    },
+    {
+      "date": "2025-12-01",
+      "actual_bn": 21.63467,
+      "predicted_bn": 21.24579780847092,
+      "seasonal_naive_bn": 16.73001
+    },
+    {
+      "date": "2026-01-01",
+      "actual_bn": 21.703439999999997,
+      "predicted_bn": 21.624956783320503,
+      "seasonal_naive_bn": 16.996
+    },
+    {
+      "date": "2026-02-01",
+      "actual_bn": 20.39418,
+      "predicted_bn": 21.559799708774793,
+      "seasonal_naive_bn": 16.10619
+    },
+    {
+      "date": "2026-03-01",
+      "actual_bn": 22.64111,
+      "predicted_bn": 22.458593130287994,
+      "seasonal_naive_bn": 18.301509999999997
+    },
+    {
+      "date": "2026-04-01",
+      "actual_bn": 22.346799999999998,
+      "predicted_bn": 22.63947199519677,
+      "seasonal_naive_bn": 17.89342
+    },
+    {
+      "date": "2026-05-01",
+      "actual_bn": 23.20193,
+      "predicted_bn": 23.159107260240077,
+      "seasonal_naive_bn": 18.67746
+    },
+    {
+      "date": "2026-06-01",
+      "actual_bn": 22.71607,
+      "predicted_bn": 23.48267595531842,
+      "seasonal_naive_bn": 18.39501
+    },
+    {
+      "date": "2026-07-01",
+      "actual_bn": 23.65835,
+      "predicted_bn": 24.087093501790072,
+      "seasonal_naive_bn": 19.467950000000002
+    },
+    {
+      "date": "2026-08-01",
+      "actual_bn": 24.50896,
+      "predicted_bn": 24.609429265420644,
+      "seasonal_naive_bn": 20.00831
+    }
+  ],
+  "future_forecast": [
+    {
+      "date": "2026-09-01",
+      "forecast_bn": 24.269763462994593
+    },
+    {
+      "date": "2026-10-01",
+      "forecast_bn": 24.931304209639823
+    },
+    {
+      "date": "2026-11-01",
+      "forecast_bn": 25.145348195844136
+    },
+    {
+      "date": "2026-12-01",
+      "forecast_bn": 25.614497431881738
+    },
+    {
+      "date": "2027-01-01",
+      "forecast_bn": 25.93650760773566
+    },
+    {
+      "date": "2027-02-01",
+      "forecast_bn": 25.80995274162342
+    },
+    {
+      "date": "2027-03-01",
+      "forecast_bn": 26.627505316651874
+    },
+    {
+      "date": "2027-04-01",
+      "forecast_bn": 26.81118970554468
+    },
+    {
+      "date": "2027-05-01",
+      "forecast_bn": 27.30294438548838
+    },
+    {
+      "date": "2027-06-01",
+      "forecast_bn": 27.554071592520614
+    },
+    {
+      "date": "2027-07-01",
+      "forecast_bn": 28.076406038334017
+    },
+    {
+      "date": "2027-08-01",
+      "forecast_bn": 28.63271499908802
+    }
+  ],
+  "final_model": {
+    "alpha": 10.0,
+    "mean": [
+      7.26917628318584,
+      7.059849115044246,
+      6.858861415929202,
+      5.153367522123893,
+      68.0,
+      0.01651349914853486,
+      -0.0286022195360078
+    ],
+    "scale": [
+      7.423958917451604,
+      7.291184269750048,
+      7.168843045592845,
+      5.937797736681717,
+      32.61901286060018,
+      0.7053473718426547,
+      0.7080920155023251
+    ],
+    "coefficients": [
+      1.558363632660214,
+      1.6173179008509309,
+      1.5982254459519927,
+      1.6676146131923064,
+      1.0471797534980152,
+      -0.02340586353308961,
+      -0.03307287627102776
+    ],
+    "intercept_bn": 7.486013362831859,
+    "train_end_exclusive": 125
+  },
+  "limitations": [
+    "One 12-month test window",
+    "No prediction intervals",
+    "Recursive forecasts accumulate error",
+    "Sensitive to future structural changes"
+  ],
+  "reference": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html"
+}
